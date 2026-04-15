@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0751026cfe86345e0b88ea604242fe32, type: 3}
+  m_Name: Buff_Wanderer
+  m_EditorClassIdentifier: Assembly-CSharp::RPG.Data.BuffSO
+  BuffName: Wanderer
+  Description: You move with uncanny agility.
+  Icon: {fileID: 0}
+  AccentColor: {r: 0.25, g: 0.55, b: 1, a: 1}
+  Rarity: 1
+  BonusMaxHP: 0
+  BonusMaxMP: 0
+  BonusAttack: 0
+  BonusDefense: 0
+  BonusMagicAttack: 0
+  BonusMagicDefense: 0
+  BonusSpeed: 5
+  BonusMovement: 2

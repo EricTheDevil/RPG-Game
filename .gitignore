@@ -157,8 +157,9 @@ sysinfo.txt
 [Hh]ide/
 
 # ── Claude Code ───────────────────────────────────────────────────────────────
-# Keep .claude/ committed so team shares hooks and settings
-# Exclude session transcripts and tool-result caches (large, ephemeral)
+# Keep .claude/settings.json (shared hooks/config)
+# Exclude personal local overrides and session data
+.claude/settings.local.json
 .claude/projects/
 .claude/todos/
 

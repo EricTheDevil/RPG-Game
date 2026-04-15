@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 682d36a8fac3e458e80867a199628e60, type: 3}
+  m_Name: Card_Heal_Rations
+  m_EditorClassIdentifier: Assembly-CSharp::RPG.Data.EventCardSO
+  CardName: Hot Meal
+  Description: A warm meal restores body and spirit. Recover 35% HP, gain 1 Ration.
+  Art: {fileID: 0}
+  Type: 2
+  Rarity: 0
+  AccentColor: {r: 0.3, g: 0.9, b: 0.5, a: 1}
+  TypeLabel: HEAL
+  ResourceCost:
+    Gold: 0
+    Scrap: 0
+    Rations: -1
+    Morale: 0
+  ResourceGrant:
+    Gold: 0
+    Scrap: 0
+    Rations: 1
+    Morale: 0
+  SpawnConfig: {fileID: 0}
+  DifficultyScale: 1
+  HealFraction: 0.35
+  MoraleBonus: 0
+  ShopOfferCount: 3
+  StatPointGrant: 0
+  CanDuplicate: 0
+  SingleUse: 1

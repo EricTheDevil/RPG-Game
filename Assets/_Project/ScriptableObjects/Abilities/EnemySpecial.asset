@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c714587f768147aa989d04ef6625774, type: 3}
+  m_Name: EnemySpecial
+  m_EditorClassIdentifier: Assembly-CSharp::RPG.Data.AbilitySO
+  AbilityName: Soul Crush
+  Description: Channels dark power for a devastating strike.
+  Icon: {fileID: 0}
+  Type: 1
+  Target: 0
+  Range: 2
+  AOERadius: 0
+  MPCost: 15
+  DamageMultiplier: 2.2
+  FlatDamage: 8
+  HealMultiplier: 0
+  FlatHeal: 0
+  ApplyDefendBuff: 0
+  VFXKey: special
+  EffectColor: {r: 0.4, g: 0, b: 0.6, a: 1}
+  SFX: {fileID: 0}

@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4bc230cb425a4c7cab22228091b730e, type: 3}
+  m_Name: DropTable_Elite
+  m_EditorClassIdentifier: Assembly-CSharp::RPG.Data.DropTableSO
+  Entries:
+  - Card: {fileID: 11400000, guid: 8274b68620b1e4f06b6fa55821256e87, type: 2}
+    WeightOverride: 0
+    MinGuaranteed: 0
+  - Card: {fileID: 11400000, guid: a5af1f863a4074e07a9dd5b10cf22ec1, type: 2}
+    WeightOverride: 0
+    MinGuaranteed: 0
+  - Card: {fileID: 11400000, guid: f488b72e2d752449eb08135a1b967f81, type: 2}
+    WeightOverride: 30
+    MinGuaranteed: 0
+  - Card: {fileID: 11400000, guid: 326327810c97f43a7821b1b540da9a61, type: 2}
+    WeightOverride: 10
+    MinGuaranteed: 0
+  - Card: {fileID: 11400000, guid: 2fe08739a779645fdb31b6461a328a2a, type: 2}
+    WeightOverride: 20
+    MinGuaranteed: 0
+  - Card: {fileID: 11400000, guid: 42e239800e5074a0aa9d7c0856a70373, type: 2}
+    WeightOverride: 15
+    MinGuaranteed: 0
+  - Card: {fileID: 11400000, guid: e72263e9fe5684192970aa061b1e2da0, type: 2}
+    WeightOverride: 20
+    MinGuaranteed: 0
+  - Card: {fileID: 11400000, guid: 57dfeab1a3ff34c2b8e670c410ea9d64, type: 2}
+    WeightOverride: 8
+    MinGuaranteed: 0
+  - Card: {fileID: 11400000, guid: e44e359769a864402af1047bbf546bc3, type: 2}
+    WeightOverride: 1
+    MinGuaranteed: 0
+  CardsPerRoll: 3
+  MaxDuplicatesPerRoll: 1

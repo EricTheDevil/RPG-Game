@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17ad4094ec1d145c980ffbb3c677ec80, type: 3}
+  m_Name: Level1
+  m_EditorClassIdentifier: Assembly-CSharp::RPG.Data.LevelDataSO
+  LevelIndex: 1
+  LevelName: The Cursed Depths
+  Description: 'Deeper in the ruin, a more powerful evil stirs.
+
+    Steel your resolve.'
+  Thumbnail: {fileID: 0}
+  DifficultyLabel: Intermediate
+  DifficultyColor: {r: 1, g: 0.7, b: 0.1, a: 1}
+  CombatSceneName: CombatStage
+  Reward: {fileID: 11400000, guid: 65985f179301d4736a0976c59d728837, type: 2}
+  MapPosition: {x: 0, y: 0.3}
+  UnlockedByDefault: 0
+  UnlocksLevels: 02000000

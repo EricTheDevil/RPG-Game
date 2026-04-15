@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/eric/Documents/untitled\\\\ folder/RPG/Assets/_Project/Scripts/UI/**)",
+      "Bash(find \"/Users/eric/Documents/untitled folder/RPG/Assets/_Project/Scripts\" -name \"*.cs\" -exec grep -l \"Update\\\\|LateUpdate\\\\|FixedUpdate\\\\|EditorGUI\\\\|SerializedObject\" {} \\\\;)",
+      "Bash(xargs -I {} basename {})",
+      "Bash(find \"/Users/eric/Documents/untitled folder/RPG/Assets/_Project\" -name \"*.cs\" -type f -exec grep -l \"RetreatButton\\\\|HeroPanel\\\\|BannerRoot\\\\|old\\\\|legacy\" {} \\\\;)",
+      "Bash(find \"/Users/eric/Documents/untitled folder/RPG/Assets/_Project/Scripts\" -name \"*.cs\" -exec grep -l \"OnEnable\\\\|Start\\\\|Awake\" {} \\\\;)",
+      "Bash(grep -oE '\\\\.[^./]+$')"
+    ]
+  }
+}

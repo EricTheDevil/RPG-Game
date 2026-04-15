@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 682d36a8fac3e458e80867a199628e60, type: 3}
+  m_Name: Card_Curse_Debt
+  m_EditorClassIdentifier: Assembly-CSharp::RPG.Data.EventCardSO
+  CardName: Blood Debt
+  Description: You owe a dangerous sum. -20 Gold when played.
+  Art: {fileID: 0}
+  Type: 7
+  Rarity: 1
+  AccentColor: {r: 0.6, g: 0.1, b: 0.3, a: 1}
+  TypeLabel: CURSE
+  ResourceCost:
+    Gold: -20
+    Scrap: 0
+    Rations: 0
+    Morale: 0
+  ResourceGrant:
+    Gold: 0
+    Scrap: 0
+    Rations: 0
+    Morale: 0
+  SpawnConfig: {fileID: 0}
+  DifficultyScale: 1
+  HealFraction: 0
+  MoraleBonus: 0
+  ShopOfferCount: 3
+  StatPointGrant: 0
+  CanDuplicate: 1
+  SingleUse: 1

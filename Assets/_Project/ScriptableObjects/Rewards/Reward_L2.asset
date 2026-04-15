@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46115249b631f4ea1abe15eedb0116c4, type: 3}
+  m_Name: Reward_L2
+  m_EditorClassIdentifier: Assembly-CSharp::RPG.Data.LevelRewardSO
+  XPReward: 300
+  GoldReward: 150
+  ItemName: Voidheart Crown
+  ItemDescription: 'A relic torn from the void itself.
+
+    All stats permanently
+    increased.'
+  ItemIcon: {fileID: 0}
+  FlavorText: "The void collapses.\nThe realm is saved \u2014 for now."
+  AccentColor: {r: 1, g: 0.4, b: 0.1, a: 1}
+  FanfareSFX: {fileID: 0}

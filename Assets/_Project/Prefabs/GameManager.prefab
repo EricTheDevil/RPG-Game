@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2051890061967089113
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4139973204504961477}
+  - component: {fileID: 4050393569979251895}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4139973204504961477
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2051890061967089113}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4050393569979251895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2051890061967089113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 538e88ac16fc945afb84e4073136117c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RPG.Core.GameManager
+  MainMenuScene: MainMenu
+  EventDeckScene: EventDeck
+  CombatScene: CombatStage
+  StarterCards:
+  - {fileID: 11400000, guid: ce3f64821ba1d436ab70748b57fb9e77, type: 2}
+  - {fileID: 11400000, guid: 1485d49c54cea439db0d649c69b6b3e7, type: 2}
+  - {fileID: 11400000, guid: 0c38d1c5b51bb4b87822c37e219e429e, type: 2}
+  - {fileID: 11400000, guid: bf04a666db47d46cc8631f9a39d1a75a, type: 2}
+  DefaultDropTable: {fileID: 11400000, guid: 44490947c394746328b86d0506783810, type: 2}
+  FallbackCombatCard: {fileID: 11400000, guid: ce3f64821ba1d436ab70748b57fb9e77, type: 2}
+  BuffRegistry: {fileID: 11400000, guid: 16495129e96d5485182e4b1bdfd79bfd, type: 2}
+  CardRegistry: {fileID: 11400000, guid: 490d93d0e291541908322dd3383bf8b7, type: 2}
