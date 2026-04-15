@@ -1,6 +1,15 @@
 # RPG — TFT-Style Autobattle Tactical RPG
 **Architecture context document for future Claude sessions**
-Last updated: 2026-04-11
+Last updated: 2026-04-15
+
+---
+
+## Folder Workflow
+
+- `Assets/_Project/` — **canonical shared source. Never write here directly.**
+- `Assets/_Local/` — personal working copy cloned from `_Project`. **All edits go here.**
+- `Assets/_Local/` is excluded from git via `.gitignore`.
+- To finalise changes: copy modified files from `_Local/` → `_Project/`, then commit.
 
 ---
 

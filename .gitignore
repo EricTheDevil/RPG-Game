@@ -156,6 +156,9 @@ sysinfo.txt
 .vs/
 [Hh]ide/
 
+# ── Local development folder (personal clone of _Project; never commit) ──────
+Assets/_Local/
+
 # ── Claude Code ───────────────────────────────────────────────────────────────
 # Keep .claude/settings.json (shared hooks/config)
 # Exclude personal local overrides and session data
