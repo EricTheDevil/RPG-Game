@@ -97,3 +97,86 @@ InitTestScene*.unity*
 
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
+# ── Unity ────────────────────────────────────────────────────────────────────
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/[Mm]emory[Cc]aptures/
+/[Rr]ecordings/
+/[Pp]rofile[Rr]eports/
+/[Aa]ssets/[Aa]ssets[Ss]tore-5.x/
+
+# Auto-generated VS/Rider project files — Unity regenerates these
+/*.csproj
+/*.unityproj
+/*.sln
+/*.slnx
+/*.suo
+/*.tmp
+/*.user
+/*.userprefs
+/*.pidb
+/*.booproj
+/*.svd
+/*.pdb
+/*.mdb
+/*.opendb
+/*.VC.db
+
+# Crash/profiling artifacts
+/crashlytics-build.properties
+sysinfo.txt
+*.stackdump
+
+# Test artifacts
+/[Tt]est[Rr]esult*/
+/[Cc]overage/
+
+# Burst debug symbols (shipped separately, not source)
+*_BurstDebugInformation_DoNotShip/
+
+# Asset Store cache
+/Assets/AssetStoreTools*
+
+# ── VS Code ───────────────────────────────────────────────────────────────────
+# Keep .vscode/ (shared settings, extensions, launch configs are useful)
+# Exclude only personal/generated files
+.vscode/ipch/
+.vscode/*.code-workspace
+
+# ── JetBrains Rider ──────────────────────────────────────────────────────────
+.idea/
+*.rider.unity.json
+
+# ── Visual Studio ─────────────────────────────────────────────────────────────
+.vs/
+[Hh]ide/
+
+# ── Claude Code ───────────────────────────────────────────────────────────────
+# Keep .claude/ committed so team shares hooks and settings
+# Exclude session transcripts and tool-result caches (large, ephemeral)
+.claude/projects/
+.claude/todos/
+
+# ── macOS ─────────────────────────────────────────────────────────────────────
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+
+# ── Windows ───────────────────────────────────────────────────────────────────
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ── Node / tooling (if any build scripts land here) ──────────────────────────
+node_modules/
+npm-debug.log*
