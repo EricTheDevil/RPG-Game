@@ -17,16 +17,20 @@ namespace RPG.Data
         public List<string> Traits = new();
 
         [Header("Base Stats")]
-        public int MaxHP        = 100;
-        public int MaxMP        = 50;
-        public int Attack       = 10;
-        public int Defense      = 5;
-        public int MagicAttack  = 8;
-        public int MagicDefense = 5;
-        public int Speed        = 8;
-        public int Movement     = 3;
+        [Range(1, 9999)] public int MaxHP        = 100;
+        [Range(0, 999)]  public int MaxMP        = 50;
+        [Range(0, 999)]  public int Attack       = 10;
+        [Range(0, 999)]  public int Defense      = 5;
+        [Range(0, 999)]  public int MagicAttack  = 8;
+        [Range(0, 999)]  public int MagicDefense = 5;
+        [Range(1, 99)]   public int Speed        = 8;
+        [Range(1, 20)]   public int Movement     = 3;
+
+        [Header("Crit")]
+        [Range(0f, 1f)]  public float BaseCritChance     = 0.10f;
+        [Range(1f, 5f)]  public float BaseCritMultiplier = 1.60f;
 
         [Header("Rewards")]
-        public int ExpReward = 50;
+        [Range(0, 9999)] public int ExpReward = 50;
     }
 }

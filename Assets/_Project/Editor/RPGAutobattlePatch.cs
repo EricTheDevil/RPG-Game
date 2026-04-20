@@ -30,7 +30,6 @@ public class RPGAutobattlePatch
         PatchCombatSystems();
         PatchCombatManagerFields();
         PatchCombatHUD();
-        BuildInitiativeBar();
         BuildBanner();
         BuildSpeedToggle();
         BuildFlashPanel();
@@ -43,22 +42,13 @@ public class RPGAutobattlePatch
         Debug.Log("[AutobattlePatch] ✅ CombatStage patched for autobattle!");
     }
 
-    // ── 1. Replace old TurnManager/EnemyAI with CombatTimeline + TraitSystem ──
+    // ── 1. Clean up deprecated objects + ensure TraitSystem ─────────────────
     static void PatchCombatSystems()
     {
-        // Remove deprecated objects
         RemoveIfExists("TurnManager");
         RemoveIfExists("EnemyAI");
+        RemoveIfExists("CombatTimeline");
 
-        // Add CombatTimeline if missing
-        if (GameObject.Find("CombatTimeline") == null)
-        {
-            var go = new GameObject("CombatTimeline");
-            go.AddComponent<CombatTimeline>();
-            Debug.Log("[AutobattlePatch] Created CombatTimeline.");
-        }
-
-        // Add TraitSystem if missing
         if (GameObject.Find("TraitSystem") == null)
         {
             var go = new GameObject("TraitSystem");
@@ -74,14 +64,6 @@ public class RPGAutobattlePatch
         if (cmGo == null) { Debug.LogError("[AutobattlePatch] CombatManager not found."); return; }
         var cm = cmGo.GetComponent<CombatManager>();
         if (cm == null) { Debug.LogError("[AutobattlePatch] CombatManager component missing."); return; }
-
-        // Wire Timeline
-        var timelineGo = GameObject.Find("CombatTimeline");
-        if (timelineGo != null)
-        {
-            cm.Timeline = timelineGo.GetComponent<CombatTimeline>();
-            Debug.Log("[AutobattlePatch] Wired CombatTimeline.");
-        }
 
         // Wire TraitSystem
         var traitGo = GameObject.Find("TraitSystem");
@@ -139,143 +121,7 @@ public class RPGAutobattlePatch
         Debug.Log("[AutobattlePatch] CombatHUD wired.");
     }
 
-    // ── 4. Build Initiative Bar ───────────────────────────────────────────────
-    static void BuildInitiativeBar()
-    {
-        var canvasGo = GameObject.Find("UICanvas");
-        if (canvasGo == null) return;
-
-        // Don't duplicate
-        if (GameObject.Find("UICanvas/InitiativeBar") != null)
-        {
-            Debug.Log("[AutobattlePatch] InitiativeBar already exists.");
-            return;
-        }
-
-        // Root bar — bottom of screen, full width, 72px tall
-        var barGo = new GameObject("InitiativeBar");
-        barGo.transform.SetParent(canvasGo.transform, false);
-        var barRect = barGo.AddComponent<RectTransform>();
-        barRect.anchorMin        = new Vector2(0f, 0f);
-        barRect.anchorMax        = new Vector2(1f, 0f);
-        barRect.pivot            = new Vector2(0.5f, 0f);
-        barRect.anchoredPosition = new Vector2(0f, 0f);
-        barRect.sizeDelta        = new Vector2(0f, 80f);
-
-        var barBG = barGo.AddComponent<Image>();
-        barBG.color = new Color(0.04f, 0.03f, 0.08f, 0.88f);
-
-        // Horizontal layout group for entries
-        var container = new GameObject("EntryContainer");
-        container.transform.SetParent(barGo.transform, false);
-        var cRect = container.AddComponent<RectTransform>();
-        cRect.anchorMin        = Vector2.zero;
-        cRect.anchorMax        = Vector2.one;
-        cRect.offsetMin        = new Vector2(12f, 6f);
-        cRect.offsetMax        = new Vector2(-12f, -6f);
-
-        var hlg = container.AddComponent<HorizontalLayoutGroup>();
-        hlg.spacing            = 10f;
-        hlg.childForceExpandWidth  = false;
-        hlg.childForceExpandHeight = true;
-        hlg.childAlignment     = TextAnchor.MiddleLeft;
-
-        // Entry prefab (built as a child template — will be pooled at runtime)
-        var entryPrefabGo = BuildEntryPrefab(container.transform);
-
-        // Wire InitiativeBarUI
-        var bar = barGo.AddComponent<InitiativeBarUI>();
-        bar.Container    = container.transform;
-        bar.EntryPrefab  = entryPrefabGo;
-        bar.PlayerColor  = new Color(0.25f, 0.70f, 1.00f);
-        bar.EnemyColor   = new Color(1.00f, 0.30f, 0.30f);
-
-        // Wire to HUD
-        var hud = canvasGo.GetComponent<CombatHUD>();
-        if (hud != null) hud.InitiativeBar = bar;
-
-        // Save as prefab asset for runtime instantiation
-        string prefabDir  = "Assets/_Project/Prefabs/UI";
-        if (!System.IO.Directory.Exists(prefabDir))
-            System.IO.Directory.CreateDirectory(prefabDir);
-
-        // Detach entry from scene — save standalone prefab
-        entryPrefabGo.transform.SetParent(null);
-        string prefabPath = $"{prefabDir}/InitiativeEntry.prefab";
-        var savedPrefab   = PrefabUtility.SaveAsPrefabAsset(entryPrefabGo, prefabPath);
-        GameObject.DestroyImmediate(entryPrefabGo);
-
-        if (savedPrefab != null) bar.EntryPrefab = savedPrefab;
-
-        EditorUtility.SetDirty(bar);
-        if (hud != null) EditorUtility.SetDirty(hud);
-        Debug.Log("[AutobattlePatch] InitiativeBar built.");
-    }
-
-    static GameObject BuildEntryPrefab(Transform parent)
-    {
-        var entry = new GameObject("InitiativeEntry");
-        entry.transform.SetParent(parent, false);
-
-        var entryRect = entry.AddComponent<RectTransform>();
-        entryRect.sizeDelta = new Vector2(68f, 68f);
-
-        // Background
-        var bg = entry.AddComponent<Image>();
-        bg.color = new Color(0.1f, 0.1f, 0.2f, 0.95f);
-
-        // Portrait image
-        var portraitGo = new GameObject("Portrait");
-        portraitGo.transform.SetParent(entry.transform, false);
-        var portRect = portraitGo.AddComponent<RectTransform>();
-        portRect.anchorMin        = new Vector2(0.1f, 0.3f);
-        portRect.anchorMax        = new Vector2(0.9f, 0.95f);
-        portRect.offsetMin        = Vector2.zero;
-        portRect.offsetMax        = Vector2.zero;
-        var portImg = portraitGo.AddComponent<Image>();
-        portImg.preserveAspect    = true;
-
-        // CT fill bar (bottom strip)
-        var ctBarGo = new GameObject("CTBar");
-        ctBarGo.transform.SetParent(entry.transform, false);
-        var ctRect = ctBarGo.AddComponent<RectTransform>();
-        ctRect.anchorMin   = new Vector2(0f, 0f);
-        ctRect.anchorMax   = new Vector2(1f, 0.28f);
-        ctRect.offsetMin   = new Vector2(2f, 2f);
-        ctRect.offsetMax   = new Vector2(-2f, -1f);
-        var ctImg = ctBarGo.AddComponent<Image>();
-        ctImg.color        = new Color(0.25f, 0.70f, 1f);
-        ctImg.type         = Image.Type.Filled;
-        ctImg.fillMethod   = Image.FillMethod.Horizontal;
-        ctImg.fillOrigin   = (int)Image.OriginHorizontal.Left;
-        ctImg.fillAmount   = 0f;
-
-        // Name label
-        var nameGo = new GameObject("NameText");
-        nameGo.transform.SetParent(entry.transform, false);
-        var nameRect = nameGo.AddComponent<RectTransform>();
-        nameRect.anchorMin   = new Vector2(0f, 0.25f);
-        nameRect.anchorMax   = new Vector2(1f, 0.52f);
-        nameRect.offsetMin   = new Vector2(2f, 0f);
-        nameRect.offsetMax   = new Vector2(-2f, 0f);
-        var nameTMP = nameGo.AddComponent<TextMeshProUGUI>();
-        nameTMP.text         = "Unit";
-        nameTMP.fontSize     = 9f;
-        nameTMP.color        = Color.white;
-        nameTMP.alignment    = TextAlignmentOptions.Center;
-        nameTMP.overflowMode = TextOverflowModes.Truncate;
-
-        // Wire InitiativeEntry component
-        var entryComp       = entry.AddComponent<InitiativeEntry>();
-        entryComp.Portrait  = portImg;
-        entryComp.Background = bg;
-        entryComp.CTBar     = ctImg;
-        entryComp.NameLabel = nameTMP;
-
-        return entry;
-    }
-
-    // ── 5. Build Phase Banner ─────────────────────────────────────────────────
+    // ── 4. Build Phase Banner ─────────────────────────────────────────────────
     static void BuildBanner()
     {
         var canvasGo = GameObject.Find("UICanvas");

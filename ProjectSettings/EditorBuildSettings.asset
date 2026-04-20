@@ -6,14 +6,29 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/_Project/Scenes/MainMenu.unity
-    guid: 1bd871053b6074b89a717feabf2ccecd
+    path: Assets/_Local/Scenes/MainMenu.unity
+    guid: 6ee56ba1d4a2146e68fccabd33df0182
   - enabled: 1
-    path: Assets/_Project/Scenes/CombatStage.unity
-    guid: b8f31c5c585754cacb1b574e4015aac0
+    path: Assets/_Local/Scenes/CombatStage.unity
+    guid: 83ae735cdd99947daaabebfa8a6a60cc
   - enabled: 1
-    path: Assets/_Project/Scenes/EventDeck.unity
-    guid: 8987b37b4b13b4ccaa029c2e82664b7a
+    path: Assets/_Local/Scenes/EventDeck.unity
+    guid: f6235573820704f2a8c23411b3b48c8a
+  - enabled: 1
+    path: Assets/_Local/Scenes/MapSelector.unity
+    guid: 45d326c6b5d2a4c55933c2d1ff3cd1dc
+  - enabled: 1
+    path: Assets/_Local/Scenes/RewardScene.unity
+    guid: 9933d5eb79a924429acf7a7505f2e2fa
+  - enabled: 1
+    path: Assets/_Local/Scenes/ClassSelect.unity
+    guid: b089c137cf2214b02a42334eb7be3501
+  - enabled: 1
+    path: Assets/_Local/Scenes/WorldMap.unity
+    guid: 835cc84894407408ca67dcdda16839e2
+  - enabled: 1
+    path: Assets/_Local/Scenes/AreaMap.unity
+    guid: 61fdb7efdfc644894a474d5a067de770
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 35845fe01580c41289b024647b1d1c53, type: 3}
   m_UseUCBPForAssetBundles: 0

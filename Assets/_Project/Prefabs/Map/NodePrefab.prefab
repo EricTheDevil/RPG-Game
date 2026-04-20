@@ -314,7 +314,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4530687843920449310}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d849347b210d4362a00172ddf1a0e82, type: 3}
+  m_Script: {fileID: 11500000, guid: 4baee40176697459a82334e265c4d977, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RPG.Map.MapNode
   LevelData: {fileID: 0}

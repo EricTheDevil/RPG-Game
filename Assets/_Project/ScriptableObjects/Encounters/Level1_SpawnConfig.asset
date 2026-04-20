@@ -9,27 +9,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb040facfc83d41ecace197184768ed0, type: 3}
+  m_Script: {fileID: 11500000, guid: 5148f6738e47b4a34b3f94ad1a97e93e, type: 3}
   m_Name: Level1_SpawnConfig
   m_EditorClassIdentifier: Assembly-CSharp::RPG.Data.UnitSpawnConfig
   PlayerUnits:
-  - Prefab: {fileID: 4940905313902321681, guid: 00930ec02702e469e9294e5a26563812, type: 3}
-    Stats: {fileID: 11400000, guid: 908a5c512bce047669c2acd6c0b84150, type: 2}
+  - Prefab: {fileID: 4940905313902321681, guid: 1b4991d7874694da0937517ec456dffe, type: 3}
+    Stats: {fileID: 11400000, guid: ca6be558f9b964112bbf3bdecf1bc371, type: 2}
     Abilities:
-    - {fileID: 11400000, guid: cdd8b8414c7f3409d8f26cc31ec3d9b1, type: 2}
-    - {fileID: 11400000, guid: c2626ab9342bb4cc7bcc652066e76384, type: 2}
-    - {fileID: 11400000, guid: cb65e0e87707b400490ecaf6c3c23650, type: 2}
+    - {fileID: 11400000, guid: 91e43c2d466984910b229e275a105123, type: 2}
+    - {fileID: 11400000, guid: c20a58a9c225949328b114af6780d037, type: 2}
+    - {fileID: 11400000, guid: 744e632332281463a89de7703c84c660, type: 2}
     GridCell: {x: 1, y: 4}
   EnemyUnits:
-  - Prefab: {fileID: 3165495727102404104, guid: 981df3b1fc0214be98d3706d38c0c00d, type: 3}
-    Stats: {fileID: 11400000, guid: a95582330b206433e8c076ec5a57acbf, type: 2}
+  - Prefab: {fileID: 3165495727102404104, guid: 74c08c609fc6b411390753bed380ffa3, type: 3}
+    Stats: {fileID: 11400000, guid: 0ac1bf1a0f8db4945b32dfb0ebc6d203, type: 2}
     Abilities:
-    - {fileID: 11400000, guid: 88be38746fc8e426581bb4ae332bba22, type: 2}
-    - {fileID: 11400000, guid: 9631778a420cf40e0b872486b6a11553, type: 2}
-    GridCell: {x: 6, y: 3}
-  - Prefab: {fileID: 3165495727102404104, guid: 981df3b1fc0214be98d3706d38c0c00d, type: 3}
-    Stats: {fileID: 11400000, guid: ba5c87daab3a34532be26c860083ecb4, type: 2}
-    Abilities:
-    - {fileID: 11400000, guid: 88be38746fc8e426581bb4ae332bba22, type: 2}
-    - {fileID: 11400000, guid: 9631778a420cf40e0b872486b6a11553, type: 2}
-    GridCell: {x: 6, y: 5}
+    - {fileID: 11400000, guid: 81a86ae07aa4245e5869de98bf1a5c7e, type: 2}
+    - {fileID: 11400000, guid: 871ecfbd4d84e44c0b5aef1c74f45cbc, type: 2}
+    GridCell: {x: 6, y: 4}

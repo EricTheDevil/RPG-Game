@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b9531a2ecdb0432c8cf086f0bdabd88, type: 3}
+  m_Name: Class_Ranger
+  m_EditorClassIdentifier: Assembly-CSharp::RPG.Data.ClassDefinitionSO
+  ClassName: Ranger
+  Description: A nimble skirmisher who strikes fast and keeps enemies off-balance.
+  ClassIcon: {fileID: 0}
+  ClassColor: {r: 0.35, g: 0.75, b: 0.45, a: 1}
+  Tier: 0
+  MaxLevel: 10
+  XPThresholds: 64000000fa000000c2010000bc020000e803000046050000d6060000980800008c0a0000b20c0000
+  StatGrowthPerLevel:
+    MaxHP: 8
+    MaxMP: 3
+    Attack: 2
+    Defense: 1
+    MagicAttack: 1
+    Speed: 1
+    CritChance: 0.015
+  LevelRewards: []
+  BaseStatsSO: {fileID: 11400000, guid: ca6be558f9b964112bbf3bdecf1bc371, type: 2}
+  EvolvesInto: {fileID: 0}
+  EvolutionTask: {fileID: 0}
+  StartingAbilities: []

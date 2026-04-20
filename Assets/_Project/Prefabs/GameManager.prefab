@@ -41,18 +41,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 2051890061967089113}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 538e88ac16fc945afb84e4073136117c, type: 3}
+  m_Script: {fileID: 11500000, guid: e2f66e3144b6b4861b12246bfc588c56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RPG.Core.GameManager
   MainMenuScene: MainMenu
   EventDeckScene: EventDeck
   CombatScene: CombatStage
   StarterCards:
-  - {fileID: 11400000, guid: ce3f64821ba1d436ab70748b57fb9e77, type: 2}
-  - {fileID: 11400000, guid: 1485d49c54cea439db0d649c69b6b3e7, type: 2}
-  - {fileID: 11400000, guid: 0c38d1c5b51bb4b87822c37e219e429e, type: 2}
-  - {fileID: 11400000, guid: bf04a666db47d46cc8631f9a39d1a75a, type: 2}
-  DefaultDropTable: {fileID: 11400000, guid: 44490947c394746328b86d0506783810, type: 2}
-  FallbackCombatCard: {fileID: 11400000, guid: ce3f64821ba1d436ab70748b57fb9e77, type: 2}
-  BuffRegistry: {fileID: 11400000, guid: 16495129e96d5485182e4b1bdfd79bfd, type: 2}
-  CardRegistry: {fileID: 11400000, guid: 490d93d0e291541908322dd3383bf8b7, type: 2}
+  - {fileID: 11400000, guid: bdd168780f6ef47e6b80ef86bf062574, type: 2}
+  - {fileID: 11400000, guid: da42d7e11cc924fe59cee40446a44d86, type: 2}
+  - {fileID: 11400000, guid: 85c96759e50354568ab72c678a91c299, type: 2}
+  - {fileID: 11400000, guid: fc1e3db09f7504e37ac54bfcd409cdd5, type: 2}
+  DefaultDropTable: {fileID: 11400000, guid: 288df5e3bd2aa48dcb3d75e945e0f811, type: 2}
+  FallbackCombatCard: {fileID: 11400000, guid: bdd168780f6ef47e6b80ef86bf062574, type: 2}
+  BuffRegistry: {fileID: 11400000, guid: 9a9a4c99dafe04a87a52c74641c1bede, type: 2}
+  CardRegistry: {fileID: 11400000, guid: 7a1aee06682714fd2aefdb068b3af270, type: 2}

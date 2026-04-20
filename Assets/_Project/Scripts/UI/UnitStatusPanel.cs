@@ -54,8 +54,10 @@ namespace RPG.UI
             if (MPBarFill) MPBarFill.color = MPBarColor;
 
             // Snap bars to initial values immediately (no slide-in)
-            float hpRatio = (float)unit.CurrentHP / Mathf.Max(1, unit.Stats.MaxHP);
-            float mpRatio = (float)unit.CurrentMP / Mathf.Max(1, unit.Stats.MaxMP);
+            int maxHP = unit.RT?.MaxHP ?? unit.Stats.MaxHP;
+            int maxMP = unit.RT?.MaxMP ?? unit.Stats.MaxMP;
+            float hpRatio = (float)unit.CurrentHP / Mathf.Max(1, maxHP);
+            float mpRatio = (float)unit.CurrentMP / Mathf.Max(1, maxMP);
             _currentHPDisplay = _targetHP = hpRatio;
             _currentMPDisplay = _targetMP = mpRatio;
             ApplyBars();
@@ -68,8 +70,10 @@ namespace RPG.UI
         private void ScheduleRefresh()
         {
             if (_unit == null) return;
-            _targetHP = (float)_unit.CurrentHP / Mathf.Max(1, _unit.Stats.MaxHP);
-            _targetMP = (float)_unit.CurrentMP / Mathf.Max(1, _unit.Stats.MaxMP);
+            int maxHP = _unit.RT?.MaxHP ?? _unit.Stats.MaxHP;
+            int maxMP = _unit.RT?.MaxMP ?? _unit.Stats.MaxMP;
+            _targetHP = (float)_unit.CurrentHP / Mathf.Max(1, maxHP);
+            _targetMP = (float)_unit.CurrentMP / Mathf.Max(1, maxMP);
             RefreshText();
         }
 
@@ -109,10 +113,12 @@ namespace RPG.UI
         private void RefreshText()
         {
             if (_unit == null) return;
+            int maxHP = _unit.RT?.MaxHP ?? _unit.Stats.MaxHP;
+            int maxMP = _unit.RT?.MaxMP ?? _unit.Stats.MaxMP;
             if (NameText)    NameText.text    = _unit.Stats.UnitName;
             if (ClassText)   ClassText.text   = _unit.Stats.ClassName;
-            if (HPValueText) HPValueText.text = $"{_unit.CurrentHP} / {_unit.Stats.MaxHP}";
-            if (MPValueText) MPValueText.text = $"{_unit.CurrentMP} / {_unit.Stats.MaxMP}";
+            if (HPValueText) HPValueText.text = $"{_unit.CurrentHP} / {maxHP}";
+            if (MPValueText) MPValueText.text = $"{_unit.CurrentMP} / {maxMP}";
         }
     }
 }

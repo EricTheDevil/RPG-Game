@@ -608,10 +608,6 @@ public class RPGSetup
         grid.Depth  = 8;
         grid.TileSize = 1.2f;
 
-        // ── Combat Timeline (replaces TurnManager) ────────────────────
-        var tmGo = new GameObject("CombatTimeline");
-        var timeline = tmGo.AddComponent<CombatTimeline>();
-
         // ── Trait System ───────────────────────────────────────────────
         var traitGo = new GameObject("TraitSystem");
         var traitSys = traitGo.AddComponent<TraitSystem>();
@@ -629,7 +625,6 @@ public class RPGSetup
         var cmGo = new GameObject("CombatManager");
         var cm   = cmGo.AddComponent<CombatManager>();
         cm.Grid        = grid;
-        cm.Timeline    = timeline;
         cm.TraitSystem = traitSys;
         cm.VFXManager  = vfx;
 
@@ -653,7 +648,7 @@ public class RPGSetup
         if (_enemyPrefab != null) cm.EnemyPrefab = _enemyPrefab.GetComponent<EnemyUnit>();
 
         // ── UI ─────────────────────────────────────────────────────────
-        var (hud, actionMenu, heroPanel, enemyPanel, resultScreen) = CreateCombatUI(vfx);
+        var (hud, heroPanel, enemyPanel, resultScreen) = CreateCombatUI(vfx);
         vfx.WorldCanvas = hud.GetComponent<Canvas>() != null ? hud.GetComponent<Canvas>() :
                           hud.GetComponentInParent<Canvas>();
 
@@ -677,7 +672,7 @@ public class RPGSetup
     // ────────────────────────────────────────────────────────────────────────────
     //  COMBAT UI
     // ────────────────────────────────────────────────────────────────────────────
-    static (GameObject hud, ActionMenuUI am, UnitStatusPanel hp, UnitStatusPanel ep, ResultScreenUI rs)
+    static (GameObject hud, UnitStatusPanel hp, UnitStatusPanel ep, ResultScreenUI rs)
         CreateCombatUI(CombatVFXManager vfxMgr)
     {
         // ── Root Canvas ────────────────────────────────────────────────
@@ -732,57 +727,6 @@ public class RPGSetup
             new Color(0.22f, 0.08f, 0.08f, 0.92f));
         var epRect = enemyPanel.GetComponent<RectTransform>();
         epRect.pivot = new Vector2(1f, 0f);
-
-        // ── Action Menu (right side) ───────────────────────────────────
-        var actionMenuPanel = MakePanel(canvasGo.transform, "ActionMenu",
-            new Color(0.06f, 0.05f, 0.12f, 0.92f),
-            new Vector2(1f, 0.5f), new Vector2(1f, 0.5f),
-            new Vector2(-10f, 0f), new Vector2(210f, 360f));
-        actionMenuPanel.GetComponent<RectTransform>().pivot = new Vector2(1f, 0.5f);
-
-        var am = actionMenuPanel.AddComponent<ActionMenuUI>();
-
-        // Add MP label
-        var mpLabel = MakeText(actionMenuPanel.transform, "MPLabel", "MP  60 / 60",
-            14f, new Color(0.4f, 0.6f, 1f), new Vector2(0f, 150f), new Vector2(190f, 24f));
-        am.MPLabel = mpLabel;
-
-        // Buttons
-        string[] btnLabels = { "Move", "Strike", "Guard", "Nova Burst", "End Turn" };
-        Color[]  btnColors =
-        {
-            new Color(0.2f, 0.5f, 0.2f),
-            new Color(0.6f, 0.3f, 0.05f),
-            new Color(0.1f, 0.3f, 0.6f),
-            new Color(0.5f, 0.1f, 0.7f),
-            new Color(0.35f, 0.35f, 0.35f),
-        };
-        float yStart = 100f;
-        Button[] buttons = new Button[5];
-        for (int i = 0; i < 5; i++)
-        {
-            buttons[i] = MakeButton(actionMenuPanel.transform, btnLabels[i] + "Btn",
-                btnLabels[i], btnColors[i], Color.white,
-                new Vector2(0f, yStart - i * 58f), new Vector2(190f, 50f));
-        }
-
-        am.MoveButton    = buttons[0];
-        am.AttackButton  = buttons[1];
-        am.DefendButton  = buttons[2];
-        am.SpecialButton = buttons[3];
-        am.EndTurnButton = buttons[4];
-
-        TextMeshProUGUI GetBtnLabel(Button b) =>
-            b?.GetComponentInChildren<TextMeshProUGUI>();
-
-        am.AttackLabel  = GetBtnLabel(buttons[1]);
-        am.DefendLabel  = GetBtnLabel(buttons[2]);
-        am.SpecialLabel = GetBtnLabel(buttons[3]);
-        var scLabel = MakeText(buttons[3].transform, "SpecialCostLabel", "20 MP",
-            11f, new Color(0.8f, 0.5f, 1f), new Vector2(60f, -15f), new Vector2(80f, 18f));
-        am.SpecialMPCostLabel = scLabel;
-
-        actionMenuPanel.SetActive(false);
 
         // ── Phase Banner (center top) ──────────────────────────────────
         var bannerGo = new GameObject("PhaseBanner");
@@ -851,7 +795,7 @@ public class RPGSetup
         hud.BannerText   = bannerTMP;
         hud.ResultScreen = rs;
 
-        return (canvasGo, am, heroPanel.GetComponent<UnitStatusPanel>(),
+        return (canvasGo, heroPanel.GetComponent<UnitStatusPanel>(),
                 enemyPanel.GetComponent<UnitStatusPanel>(), rs);
     }
 

@@ -185,7 +185,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4288256486
   m_fontColor: {r: 0.9, g: 0.6, b: 0.6, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -198,7 +198,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -282,10 +282,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 159835937}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad407b811c6244b439aa45bfe21911bc, type: 3}
+  m_Script: {fileID: 11500000, guid: 876582ce43a144ebc845257544a0fd94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SceneBootstrap
-  GameManagerPrefab: {fileID: 0}
+  GameManagerPrefab: {fileID: 2051890061967089113, guid: 7183f4ad21ccf453b821996dca2a3b13, type: 3}
 --- !u!4 &159835939
 Transform:
   m_ObjectHideFlags: 0
@@ -704,7 +704,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4294960857
   m_fontColor: {r: 0.85, g: 0.9, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -717,7 +717,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -1293,7 +1293,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4278520333
   m_fontColor: {r: 0.05, g: 0.04, b: 0.02, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -1306,7 +1306,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -1551,7 +1551,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4290743436
   m_fontColor: {r: 0.55, g: 0.55, b: 0.75, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -1564,7 +1564,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -1651,7 +1651,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1760091092}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 174e8e162d68b430c90113ebbd084f6d, type: 3}
+  m_Script: {fileID: 11500000, guid: b3341355c0e6c4107a3cd80185cb885a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RPG.UI.MainMenuUI
   TitleText: {fileID: 543140595}

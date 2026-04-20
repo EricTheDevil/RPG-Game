@@ -35,9 +35,6 @@ namespace RPG.UI
         public int             MaxLogLines = 8;
         public ScrollRect      LogScroll;
 
-        [Header("Initiative Bar")]
-        public InitiativeBarUI InitiativeBar;
-
         [Header("Result / Buff Screens")]
         public ResultScreenUI  ResultScreen;
         public BuffSelectionUI BuffSelection;
@@ -96,8 +93,7 @@ namespace RPG.UI
                     }
                 }
 
-                if (InitiativeBar != null && CombatTimeline.Instance != null)
-                    InitiativeBar.Refresh(CombatTimeline.Instance.GetSortedUnits());
+                // InitiativeBar removed — real-time system has no CT ordering to display
             };
 
             cm.OnVictory += () =>
@@ -147,11 +143,7 @@ namespace RPG.UI
                 ShowBanner("<color=#88CCFF>Auto-Battle  —  Begin!</color>", 2f);
         }
 
-        private void HandleUnitActed(Unit unit)
-        {
-            if (InitiativeBar != null && CombatTimeline.Instance != null)
-                InitiativeBar.Refresh(CombatTimeline.Instance.GetSortedUnits(), unit);
-        }
+        private void HandleUnitActed(Unit unit) { }
 
         // ── Log ───────────────────────────────────────────────────────────────
         public void AddLog(string message)

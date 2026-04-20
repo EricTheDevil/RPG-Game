@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 46115249b631f4ea1abe15eedb0116c4, type: 3}
+  m_Script: {fileID: 11500000, guid: 093897162be1e475aac953688806517d, type: 3}
   m_Name: Reward_L2
   m_EditorClassIdentifier: Assembly-CSharp::RPG.Data.LevelRewardSO
   XPReward: 300

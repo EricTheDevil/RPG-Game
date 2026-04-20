@@ -6309,7 +6309,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1173049542}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4225adf64c1054f108829beee8f9ca40, type: 3}
+  m_Script: {fileID: 11500000, guid: 1179d2c5621aa4c5c8eca2c721ed9e5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RPG.UI.RewardUI
   VictoryText: {fileID: 2132950985}

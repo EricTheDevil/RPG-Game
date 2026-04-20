@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0da19525a0cf84026924dedee034cd8f, type: 3}
+  m_Name: SectorEvent_Combat_Ambush
+  m_EditorClassIdentifier: Assembly-CSharp::RPG.Data.SectorEventSO
+  EventName: Ambush
+  Prompt: Enemies spring from the shadows!
+  Icon: {fileID: 0}
+  Category: 0
+  Rarity: 0
+  Weight: 80
+  Choices: []
+  SpawnConfig: {fileID: 0}
+  DifficultyScale: 1.2
+  VictoryGrant:
+    Gold: 15
+    Scrap: 5
+    Rations: 1
+    Morale: 0
+  CombatClassXPReward: 65
+  HealFraction: 0
+  InstantGrant:
+    Gold: 0
+    Scrap: 0
+    Rations: 0
+    Morale: 0
+  ShrineClassXP: 100
+  ShopOfferCount: 3

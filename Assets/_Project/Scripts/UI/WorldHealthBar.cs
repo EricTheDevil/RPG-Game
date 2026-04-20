@@ -59,8 +59,8 @@ namespace RPG.UI
         private void ScheduleUpdate()
         {
             if (_unit == null) return;
-            _targetHP = (float)_unit.CurrentHP / Mathf.Max(1, _unit.Stats.MaxHP);
-            _targetMP = (float)_unit.CurrentMP / Mathf.Max(1, _unit.Stats.MaxMP);
+            _targetHP = (float)_unit.CurrentHP / Mathf.Max(1, _unit.RT?.MaxHP ?? _unit.Stats.MaxHP);
+            _targetMP = (float)_unit.CurrentMP / Mathf.Max(1, _unit.RT?.MaxMP ?? _unit.Stats.MaxMP);
         }
 
         // ── Per-frame ─────────────────────────────────────────────────────────
@@ -80,14 +80,9 @@ namespace RPG.UI
             }
             if (dirty) ApplyFills();
 
-            // Billboard: face camera using only the Y-axis rotation so the bar stays flat
+            // Billboard: always face the camera, overriding any parent rotation
             if (_cam != null)
-            {
-                Vector3 camForward = _cam.forward;
-                camForward.y = 0f;
-                if (camForward.sqrMagnitude > 0.001f)
-                    transform.rotation = Quaternion.LookRotation(camForward);
-            }
+                transform.rotation = _cam.rotation;
         }
 
         private void ApplyFills()

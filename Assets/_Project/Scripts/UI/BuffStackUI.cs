@@ -8,11 +8,9 @@ using RPG.Data;
 namespace RPG.UI
 {
     /// <summary>
-    /// Displays the hero's currently active buffs on the MapSelector screen.
-    /// Instantiates one row per unique buff (stacks show a count badge).
-    /// Wire to a vertical LayoutGroup panel in the MapSelector scene.
-    ///
-    /// The panel auto-hides when there are no buffs.
+    /// Displays the hero's earned buffs (e.g. in EventDeck or Combat HUD).
+    /// Instantiates one row per unique buff; stacks show a count badge.
+    /// Wire to a vertical LayoutGroup panel. Auto-hides when there are no buffs.
     /// </summary>
     public class BuffStackUI : MonoBehaviour
     {
@@ -36,7 +34,7 @@ namespace RPG.UI
                 Destroy(child.gameObject);
 
             var session = GameSession.Instance;
-            if (session == null || session.ActiveBuffs.Count == 0)
+            if (session == null || session.EarnedBuffs.Count == 0)
             {
                 EmptyLabel?.SetActive(true);
                 HeaderText?.gameObject.SetActive(false);
@@ -48,7 +46,7 @@ namespace RPG.UI
 
             // Aggregate stacks
             var counts = new Dictionary<BuffSO, int>();
-            foreach (var buff in session.ActiveBuffs)
+            foreach (var buff in session.EarnedBuffs)
             {
                 if (buff == null) continue;
                 counts.TryGetValue(buff, out int c);
@@ -91,13 +89,15 @@ namespace RPG.UI
         private static string BuildStatSummary(BuffSO b, int stacks)
         {
             var parts = new List<string>();
-            if (b.BonusAttack      != 0) parts.Add($"ATK {Sign(b.BonusAttack      * stacks)}");
-            if (b.BonusDefense     != 0) parts.Add($"DEF {Sign(b.BonusDefense     * stacks)}");
-            if (b.BonusMaxHP       != 0) parts.Add($"HP  {Sign(b.BonusMaxHP       * stacks)}");
-            if (b.BonusMaxMP       != 0) parts.Add($"MP  {Sign(b.BonusMaxMP       * stacks)}");
-            if (b.BonusMagicAttack != 0) parts.Add($"MAG {Sign(b.BonusMagicAttack * stacks)}");
-            if (b.BonusSpeed       != 0) parts.Add($"SPD {Sign(b.BonusSpeed       * stacks)}");
-            if (b.BonusMovement    != 0) parts.Add($"MOV {Sign(b.BonusMovement    * stacks)}");
+            if (b.BonusAttack        != 0)   parts.Add($"ATK {Sign(b.BonusAttack        * stacks)}");
+            if (b.BonusDefense       != 0)   parts.Add($"DEF {Sign(b.BonusDefense       * stacks)}");
+            if (b.BonusMaxHP         != 0)   parts.Add($"HP  {Sign(b.BonusMaxHP         * stacks)}");
+            if (b.BonusMaxMP         != 0)   parts.Add($"MP  {Sign(b.BonusMaxMP         * stacks)}");
+            if (b.BonusMagicAttack   != 0)   parts.Add($"MAG {Sign(b.BonusMagicAttack   * stacks)}");
+            if (b.BonusSpeed         != 0)   parts.Add($"SPD {Sign(b.BonusSpeed         * stacks)}");
+            if (b.BonusMovement      != 0)   parts.Add($"MOV {Sign(b.BonusMovement      * stacks)}");
+            float critPct = b.BonusCritChance * stacks * 100f;
+            if (critPct > 0.01f)             parts.Add($"CRIT +{critPct:F0}%");
             return string.Join("  ", parts);
         }
 

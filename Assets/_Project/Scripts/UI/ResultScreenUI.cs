@@ -10,12 +10,9 @@ namespace RPG.UI
     /// Post-combat result overlay shown inside CombatStage.
     ///
     /// Game loop:
-    ///   Victory → "Continue →" → EventDeck (card drops queued by GameManager)
+    ///   Victory → "Continue →" → AreaMap (return to exploring the current area)
     ///   Defeat  → "Retry"       → same combat again
     ///           → "Abandon Run" → Main Menu (run ends)
-    ///
-    /// Null-safe: falls back to direct SceneManager.LoadScene if GameManager
-    /// isn't alive (e.g. playtesting CombatStage directly from the editor).
     ///
     /// Hidden via CanvasGroup.alpha — never SetActive(false), preserves coroutines.
     /// </summary>
@@ -63,13 +60,13 @@ namespace RPG.UI
             if (isVictory)
             {
                 if (ResultText) { ResultText.text = "VICTORY!"; ResultText.color = VictoryColor; }
-                if (FlavorText)   FlavorText.text = "The enemies are defeated.\nYour next card awaits.";
+                if (FlavorText)   FlavorText.text = "The enemies are defeated.\nOnward through the area.";
 
                 ContinueButton?.gameObject.SetActive(true);
                 RetryButton?.gameObject.SetActive(false);
                 AbandonButton?.gameObject.SetActive(false);
 
-                if (ContinueLabel) ContinueLabel.text = "Continue  →";
+                if (ContinueLabel) ContinueLabel.text = "Continue  \u2192";
             }
             else
             {
@@ -102,7 +99,7 @@ namespace RPG.UI
             if (GameManager.Instance != null)
                 GameManager.Instance.OnCombatVictory();
             else
-                UnityEngine.SceneManagement.SceneManager.LoadScene("EventDeck");
+                UnityEngine.SceneManagement.SceneManager.LoadScene("AreaMap");
         }
 
         private void OnRetry()

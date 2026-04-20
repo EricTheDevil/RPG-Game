@@ -1334,10 +1334,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 613825728}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad407b811c6244b439aa45bfe21911bc, type: 3}
+  m_Script: {fileID: 11500000, guid: 876582ce43a144ebc845257544a0fd94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SceneBootstrap
-  GameManagerPrefab: {fileID: 4050393569979251895, guid: 30ecc9732dad24401b40a8b3fb24be08, type: 3}
+  GameManagerPrefab: {fileID: 2051890061967089113, guid: 7183f4ad21ccf453b821996dca2a3b13, type: 3}
 --- !u!4 &613825730
 Transform:
   m_ObjectHideFlags: 0
@@ -2540,11 +2540,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1559309980}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06a935cee493d494fbb6b437d0f0b115, type: 3}
+  m_Script: {fileID: 11500000, guid: baa0529a22b05446cb0e61a00e0d9050, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RPG.UI.EventDeckUI
   CardContainer: {fileID: 1801189593}
-  CardPrefab: {fileID: 7769378726695537983, guid: 848f356a1413e4431813a5ce38e32197, type: 3}
+  CardPrefab: {fileID: 2216261837851138526, guid: e00e3dd37732c4c39813bb0ba069ade8, type: 3}
   HandScrollRect: {fileID: 246995193}
   GoldText: {fileID: 3979076}
   ScrapText: {fileID: 313090933}

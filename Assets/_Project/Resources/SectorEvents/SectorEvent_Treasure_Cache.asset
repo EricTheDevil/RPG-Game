@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0da19525a0cf84026924dedee034cd8f, type: 3}
+  m_Name: SectorEvent_Treasure_Cache
+  m_EditorClassIdentifier: Assembly-CSharp::RPG.Data.SectorEventSO
+  EventName: Hidden Cache
+  Prompt: 'Tucked beneath a rock: supplies left by a traveler.'
+  Icon: {fileID: 0}
+  Category: 4
+  Rarity: 0
+  Weight: 100
+  Choices: []
+  SpawnConfig: {fileID: 0}
+  DifficultyScale: 1
+  VictoryGrant:
+    Gold: 0
+    Scrap: 0
+    Rations: 0
+    Morale: 0
+  CombatClassXPReward: 50
+  HealFraction: 0
+  InstantGrant:
+    Gold: 15
+    Scrap: 0
+    Rations: 2
+    Morale: 0
+  ShrineClassXP: 100
+  ShopOfferCount: 3

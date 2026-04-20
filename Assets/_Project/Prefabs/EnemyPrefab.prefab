@@ -622,7 +622,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5942553285925636685}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d8e931dc35e44b4c87071db6fcbaccf, type: 3}
+  m_Script: {fileID: 11500000, guid: 8c4005ae023e0444281b578c86d6bbc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RPG.UI.WorldHealthBar
   HPFill: {fileID: 8497485829240246898}
@@ -769,7 +769,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8098472470736643318}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4402dfbfdd3a64de289bbb19e3437e4a, type: 3}
+  m_Script: {fileID: 11500000, guid: 277f1952870fa4786ab0dd80b2de2187, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RPG.Units.EnemyUnit
   Stats: {fileID: 0}
@@ -786,7 +786,7 @@ Animator:
   m_GameObject: {fileID: 8098472470736643318}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: ec26f998c53624dc6a8b3eaac16ebcde, type: 2}
+  m_Controller: {fileID: 9100000, guid: c7cd8ec9af44d4a118d47ab89cb1c9e0, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

@@ -145,23 +145,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 44740909}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b2e1b6cb7beca45adb355cee649380a2, type: 3}
+  m_Script: {fileID: 11500000, guid: db0928f64a00946c5b04a83263ca4b70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RPG.Combat.CombatManager
   Grid: {fileID: 933603948}
   Timeline: {fileID: 2051999386}
   VFXManager: {fileID: 1513914346}
   TraitSystem: {fileID: 1052630609}
-  SpawnConfig: {fileID: 0}
-  HeroPrefab: {fileID: 4940905313902321681, guid: 00930ec02702e469e9294e5a26563812, type: 3}
-  EnemyPrefab: {fileID: 3165495727102404104, guid: 981df3b1fc0214be98d3706d38c0c00d, type: 3}
-  HeroStats: {fileID: 11400000, guid: 908a5c512bce047669c2acd6c0b84150, type: 2}
-  EnemyStats: {fileID: 11400000, guid: a95582330b206433e8c076ec5a57acbf, type: 2}
-  AttackAbility: {fileID: 11400000, guid: cdd8b8414c7f3409d8f26cc31ec3d9b1, type: 2}
-  DefendAbility: {fileID: 11400000, guid: c2626ab9342bb4cc7bcc652066e76384, type: 2}
-  SpecialAbility: {fileID: 11400000, guid: cb65e0e87707b400490ecaf6c3c23650, type: 2}
-  EnemyAttackAbility: {fileID: 11400000, guid: 88be38746fc8e426581bb4ae332bba22, type: 2}
-  EnemySpecialAbility: {fileID: 11400000, guid: 9631778a420cf40e0b872486b6a11553, type: 2}
+  SpawnConfig: {fileID: 11400000, guid: 316df2818783e44bc929fa196dccdfd5, type: 2}
+  HeroPrefab: {fileID: 4940905313902321681, guid: 1b4991d7874694da0937517ec456dffe, type: 3}
+  EnemyPrefab: {fileID: 3165495727102404104, guid: 74c08c609fc6b411390753bed380ffa3, type: 3}
+  HeroStats: {fileID: 11400000, guid: ca6be558f9b964112bbf3bdecf1bc371, type: 2}
+  EnemyStats: {fileID: 11400000, guid: 0ac1bf1a0f8db4945b32dfb0ebc6d203, type: 2}
+  AttackAbility: {fileID: 11400000, guid: 91e43c2d466984910b229e275a105123, type: 2}
+  DefendAbility: {fileID: 11400000, guid: c20a58a9c225949328b114af6780d037, type: 2}
+  SpecialAbility: {fileID: 11400000, guid: 744e632332281463a89de7703c84c660, type: 2}
+  EnemyAttackAbility: {fileID: 11400000, guid: 81a86ae07aa4245e5869de98bf1a5c7e, type: 2}
+  EnemySpecialAbility: {fileID: 11400000, guid: 871ecfbd4d84e44c0b5aef1c74f45cbc, type: 2}
   PlayerSpawns:
   - {x: 1, y: 3}
   EnemySpawns:
@@ -411,7 +411,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 77019416}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7bd8acc174314aaf9cc38d22b2b749a, type: 3}
+  m_Script: {fileID: 11500000, guid: f882ae594834248d798b215f90835637, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RPG.UI.BuffCardUI
   CardBackground: {fileID: 77019418}
@@ -1818,7 +1818,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 233724293}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f27671eeeddb4872afd5e4e3f64ee6b, type: 3}
+  m_Script: {fileID: 11500000, guid: c8cfa97396c194d189f14be64d9d71d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RPG.UI.InitiativeBarUI
   Container: {fileID: 261614881}
@@ -1912,7 +1912,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 249518145}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 223666e6ae2cc4128bb478e0dec65a27, type: 3}
+  m_Script: {fileID: 11500000, guid: 5b391481cca9b40eeaea8fa811b3bfb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RPG.Core.CameraController
   Target: {fileID: 1394751564}
@@ -2000,7 +2000,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 249518145}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a3e09a884af74c279f59576b4397f74, type: 3}
+  m_Script: {fileID: 11500000, guid: 1f56289b48b374365a4f96d3c59fef6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RPG.VFX.CameraShake
   NormalDuration: 0.18
@@ -2745,7 +2745,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -4870,7 +4870,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 848261672}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 116edb6a0666340069b945a7b137ec6b, type: 3}
+  m_Script: {fileID: 11500000, guid: ee7b2e926d7eb44c4991d7e92fd96a5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RPG.UI.ResultScreenUI
   CanvasGroup: {fileID: 848261675}
@@ -5394,18 +5394,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 933603947}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 33e9c7f6f33824243bc39c1897a6b767, type: 3}
+  m_Script: {fileID: 11500000, guid: 715429cec8d344d3089960c9f299ce83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RPG.Grid.BattleGrid
   Width: 8
   Depth: 8
   TileSize: 1.2
   TileThickness: 0.18
-  TilePrefab: {fileID: 6337463070953579213, guid: 9a17dfbc32f8e4323990bbf92a985ece, type: 3}
-  DefaultTileMat: {fileID: 2100000, guid: ef85ff536aff447979fe5d4941f0810a, type: 2}
-  MoveTileMat: {fileID: 2100000, guid: a64d061a4013a40988ac85ea87ff292d, type: 2}
-  AttackTileMat: {fileID: 2100000, guid: 03ee8d4962b5643a8a76296d082855f6, type: 2}
-  SelectedTileMat: {fileID: 2100000, guid: 416eb4d05356b415ca6e920ca57c7be1, type: 2}
+  TilePrefab: {fileID: 6337463070953579213, guid: 0c5fa7e30c7054b108a847b121dbe511, type: 3}
+  DefaultTileMat: {fileID: 2100000, guid: 8c0da34c96e3e4dea9d6cbd8019ef316, type: 2}
+  MoveTileMat: {fileID: 2100000, guid: ec88e40cb2e2b4903922d28ead39ba7a, type: 2}
+  AttackTileMat: {fileID: 2100000, guid: 8a444dc569d244cd08a25a0ce4167d98, type: 2}
+  SelectedTileMat: {fileID: 2100000, guid: 563b63ef17ccd4daa81dce497f0381db, type: 2}
   HeightFrequency: 0.45
   HeightLevels: 3
   HeightStep: 0.4
@@ -6087,7 +6087,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1052630608}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e57d4892f201443ba067adfe35ea40e, type: 3}
+  m_Script: {fileID: 11500000, guid: 651a5178e2e674eda97ad0173c8d86fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RPG.Combat.TraitSystem
   Bonuses: []
@@ -6454,7 +6454,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1148340450}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8fafdc7b0126c46eb8664f3d7290be0f, type: 3}
+  m_Script: {fileID: 11500000, guid: 28b1a68cf60944e40ad3ca0f5f790240, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RPG.UI.CombatHUD
   PlayerPanels: []
@@ -6887,7 +6887,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1228055588}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15539f5f9f18c49699337e5692895ef8, type: 3}
+  m_Script: {fileID: 11500000, guid: b03a728856ace42439cfa785162adf95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RPG.UI.ActionMenuUI
   MoveButton: {fileID: 534728904}
@@ -7129,7 +7129,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1314732210}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a41db874be3a046489000789ff3a74a4, type: 3}
+  m_Script: {fileID: 11500000, guid: 52a0f503044654134a0022f1ff1c8436, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RPG.UI.UnitStatusPanel
   NameText: {fileID: 1658333238}
@@ -7676,7 +7676,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1442249639}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a41db874be3a046489000789ff3a74a4, type: 3}
+  m_Script: {fileID: 11500000, guid: 52a0f503044654134a0022f1ff1c8436, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RPG.UI.UnitStatusPanel
   NameText: {fileID: 2110381907}
@@ -8076,7 +8076,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1485021290}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7bd8acc174314aaf9cc38d22b2b749a, type: 3}
+  m_Script: {fileID: 11500000, guid: f882ae594834248d798b215f90835637, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RPG.UI.BuffCardUI
   CardBackground: {fileID: 1485021292}
@@ -8201,7 +8201,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1513914345}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3628009d831b4a15b7dcf6a0f4cb9ac, type: 3}
+  m_Script: {fileID: 11500000, guid: a0461a0bcd03f4570974869d2564edc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RPG.VFX.CombatVFXManager
   FloatingTextPrefab: {fileID: 9222544155673528882, guid: a5352026fb3aa478d881760ffb6e178c, type: 3}
@@ -10014,7 +10014,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1759543841}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ade3e4305e6543d189546a789e5258d, type: 3}
+  m_Script: {fileID: 11500000, guid: 9642374f3c3284c8f9a2f6f205c7c41d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RPG.UI.BuffSelectionUI
   Registry: {fileID: 11400000, guid: 16495129e96d5485182e4b1bdfd79bfd, type: 2}
@@ -10603,7 +10603,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1981260266}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7bd8acc174314aaf9cc38d22b2b749a, type: 3}
+  m_Script: {fileID: 11500000, guid: f882ae594834248d798b215f90835637, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RPG.UI.BuffCardUI
   CardBackground: {fileID: 1981260268}
@@ -10851,7 +10851,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2051999385}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 875f51f2f02be4760b60bd4e5914512e, type: 3}
+  m_Script: {fileID: 11500000, guid: c5f4f0304cad94ea5959289a53eec667, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RPG.Combat.CombatTimeline
   CTThreshold: 100

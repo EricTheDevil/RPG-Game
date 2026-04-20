@@ -6,9 +6,9 @@ using RPG.Core;
 namespace RPG.UI
 {
     /// <summary>
-    /// Main menu — entry point for the FTL-style roguelike run.
-    /// "New Run" deals starter cards and opens the EventDeck hub.
-    /// "Continue" loads an existing save (if one exists).
+    /// Main menu — entry point for the roguelike run.
+    /// "New Run" generates a world map and starts the journey to the Demon Lord.
+    /// "Continue" loads an existing save.
     /// </summary>
     public class MainMenuUI : MonoBehaviour
     {
@@ -28,16 +28,15 @@ namespace RPG.UI
         private void Start()
         {
             if (TitleText)    TitleText.text    = "REALM OF TACTICS";
-            if (SubtitleText) SubtitleText.text = "Card-Driven Tactical RPG";
+            if (SubtitleText) SubtitleText.text = "Journey to the Demon Lord";
 
             NewRunButton?.onClick.AddListener(OnNewRun);
             ContinueButton?.onClick.AddListener(OnContinue);
             QuitButton?.onClick.AddListener(OnQuit);
 
-            // Show Continue only when a save exists
             bool hasSave = SaveSystem.SaveExists();
-            if (ContinueRow)      ContinueRow.SetActive(hasSave);
-            if (ContinueButton)   ContinueButton.gameObject.SetActive(hasSave);
+            if (ContinueRow)    ContinueRow.SetActive(hasSave);
+            if (ContinueButton) ContinueButton.gameObject.SetActive(hasSave);
         }
 
         private void OnNewRun()
@@ -45,16 +44,15 @@ namespace RPG.UI
             if (GameManager.Instance != null)
                 GameManager.Instance.StartNewRun();
             else
-                UnityEngine.SceneManagement.SceneManager.LoadScene("EventDeck");
+                UnityEngine.SceneManagement.SceneManager.LoadScene("WorldMap");
         }
 
         private void OnContinue()
         {
-            // Save is loaded automatically in GameManager.Awake; just navigate to the hub.
             if (GameManager.Instance != null)
-                GameManager.Instance.GoToEventDeck();
+                GameManager.Instance.GoToWorldMap();
             else
-                UnityEngine.SceneManagement.SceneManager.LoadScene("EventDeck");
+                UnityEngine.SceneManagement.SceneManager.LoadScene("WorldMap");
         }
 
         private void OnQuit()

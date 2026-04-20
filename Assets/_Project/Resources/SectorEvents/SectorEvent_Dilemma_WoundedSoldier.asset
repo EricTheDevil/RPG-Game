@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0da19525a0cf84026924dedee034cd8f, type: 3}
+  m_Name: SectorEvent_Dilemma_WoundedSoldier
+  m_EditorClassIdentifier: Assembly-CSharp::RPG.Data.SectorEventSO
+  EventName: Wounded Soldier
+  Prompt: An injured soldier asks you to carry a message to his commander. It will
+    take you off-route.
+  Icon: {fileID: 0}
+  Category: 1
+  Rarity: 0
+  Weight: 80
+  Choices:
+  - Label: Deliver the message
+    FlavorText: The commander rewards your detour.
+    ResourceDelta:
+      Gold: 20
+      Scrap: 0
+      Rations: -1
+      Morale: 0
+    HeroHPDelta: 0
+    ClassXPReward: 40
+    RequiresClassLevel: 0
+    MinClassLevel: 0
+  - Label: Treat his wounds instead
+    FlavorText: He can make it himself. You patch him up and move on.
+    ResourceDelta:
+      Gold: 0
+      Scrap: 0
+      Rations: -1
+      Morale: 2
+    HeroHPDelta: 0
+    ClassXPReward: 25
+    RequiresClassLevel: 0
+    MinClassLevel: 0
+  - Label: "Leave him \u2014 you have a mission"
+    FlavorText: Every second counts.
+    ResourceDelta:
+      Gold: 0
+      Scrap: 0
+      Rations: 0
+      Morale: 0
+    HeroHPDelta: 0
+    ClassXPReward: 0
+    RequiresClassLevel: 0
+    MinClassLevel: 0
+  SpawnConfig: {fileID: 0}
+  DifficultyScale: 1
+  VictoryGrant:
+    Gold: 0
+    Scrap: 0
+    Rations: 0
+    Morale: 0
+  CombatClassXPReward: 50
+  HealFraction: 0
+  InstantGrant:
+    Gold: 0
+    Scrap: 0
+    Rations: 0
+    Morale: 0
+  ShrineClassXP: 100
+  ShopOfferCount: 3

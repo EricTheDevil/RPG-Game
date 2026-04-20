@@ -1,171 +1,294 @@
 using System.Collections.Generic;
 using UnityEngine;
 using RPG.Data;
+using RPG.Map;
 
 namespace RPG.Core
 {
     /// <summary>
     /// Persistent cross-scene session data — survives all scene loads.
+    /// Resets on run start / death.
     ///
     /// Owns:
     ///   • PlayerResources  (Gold, Scrap, Rations, Morale)
-    ///   • Card hand        (List of EventCardSO)
-    ///   • Active run buffs (List of BuffSO)
-    ///   • Level progression
+    ///   • World map state  (WorldMapData, current layer/node)
+    ///   • Area map state   (AreaMapData tile grid, starvation)
+    ///   • Hero class state (which class is active, in-run XP pending delivery)
+    ///   • Task progress    (RunTaskProgress counters for ClassTask evaluation)
+    ///   • Earned run buffs (List of BuffSO)
+    ///   • Hero runtime state (RuntimeStats snapshot + current HP)
     /// </summary>
     public class GameSession : MonoBehaviour
     {
         public static GameSession Instance { get; private set; }
 
-        // ── Active level ──────────────────────────────────────────────────────
-        public LevelDataSO CurrentLevel { get; private set; }
-
         // ── Resources ─────────────────────────────────────────────────────────
         public PlayerResources Resources { get; private set; } = new PlayerResources();
 
-        // ── Card Hand ─────────────────────────────────────────────────────────
-        /// <summary>Cards the player currently holds. Shown in the EventDeck scene.</summary>
-        public IReadOnlyList<EventCardSO> Hand => _hand;
-        private readonly List<EventCardSO> _hand = new();
+        // ── World Map State ───────────────────────────────────────────────────
+        public WorldMapData WorldMap          { get; set; }
+        public int          CurrentLayerIndex { get; set; } = 0;
+        public string       CurrentWorldNodeId { get; set; }
 
-        // ── Legacy progression (kept for XP/gold counters + save compat) ──────
-        public int TotalGold { get; private set; }
-        public int TotalXP   { get; private set; }
+        // ── Area Map State ────────────────────────────────────────────────────
+        public AreaMapData CurrentArea { get; set; }
 
-        // ── Roguelike Buffs ───────────────────────────────────────────────────
-        public IReadOnlyList<BuffSO> ActiveBuffs => _activeBuffs;
-        private readonly List<BuffSO> _activeBuffs = new();
+        // ── Starvation ────────────────────────────────────────────────────────
+        /// <summary>True when the player moved with Rations = 0 this area entry.</summary>
+        public bool IsStarving { get; private set; } = false;
 
-        private readonly HashSet<int> _completedLevels = new();
-        private readonly HashSet<int> _unlockedLevels  = new();
+        /// <summary>Cumulative MaxHP penalty from starvation (cap at 30%).</summary>
+        public float StarvationHPPenalty { get; private set; } = 0f;
 
-        public IEnumerable<int> CompletedLevelIndices => _completedLevels;
-        public IEnumerable<int> UnlockedLevelIndices  => _unlockedLevels;
+        private const float StarvationHPLossPerMove = 0.05f;
+        private const float StarvationHPCap         = 0.30f;
+        private const int   StarvationMoraleLoss    = 1;
 
-        // ── Pending card drops (queued by CombatManager, consumed by EventDeck) ─
-        private readonly List<EventCardSO> _pendingDrops = new();
-        public IReadOnlyList<EventCardSO> PendingDrops => _pendingDrops;
+        // ── Hero Class State ──────────────────────────────────────────────────
+        /// <summary>The class chosen at run start. Used to apply stat growth and rewards.</summary>
+        public ClassDefinitionSO ActiveClass { get; set; }
+
+        /// <summary>Pending class XP earned this run — delivered to CommanderProfile on victory.</summary>
+        public int PendingClassXP { get; private set; } = 0;
+
+        // ── Task Progress ─────────────────────────────────────────────────────
+        public RunTaskProgress TaskProgress { get; set; } = new RunTaskProgress();
+
+        // ── Earned Buffs ──────────────────────────────────────────────────────
+        public IReadOnlyList<BuffSO> EarnedBuffs => _earnedBuffs;
+        private readonly List<BuffSO> _earnedBuffs = new();
+
+        // ── Hero Runtime State ────────────────────────────────────────────────
+        public RPG.Units.RuntimeStats HeroRT      { get; set; } = null;
+        public int                    HeroCurrentHP { get; set; } = -1;
+        public int                    FightsWon     { get; set; } = 0;
 
         // ── Lifecycle ─────────────────────────────────────────────────────────
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void AutoCreate()
+        {
+            if (Instance != null) return;
+            var go = new GameObject("GameSession");
+            go.AddComponent<GameSession>();
+        }
+
         private void Awake()
         {
             if (Instance != null && Instance != this) { Destroy(gameObject); return; }
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            _unlockedLevels.Add(0);
         }
-
-        // ── Level API ─────────────────────────────────────────────────────────
-
-        public void SetCurrentLevel(LevelDataSO level) => CurrentLevel = level;
-
-        public void CompleteCurrentLevel()
-        {
-            if (CurrentLevel == null) return;
-            _completedLevels.Add(CurrentLevel.LevelIndex);
-
-            if (CurrentLevel.Reward != null)
-            {
-                TotalGold += CurrentLevel.Reward.GoldReward;
-                TotalXP   += CurrentLevel.Reward.XPReward;
-                Resources.Apply(new ResourceDelta { Gold = CurrentLevel.Reward.GoldReward });
-            }
-
-            foreach (int idx in CurrentLevel.UnlocksLevels)
-                _unlockedLevels.Add(idx);
-        }
-
-        public bool IsLevelCompleted(int index) => _completedLevels.Contains(index);
-        public bool IsLevelUnlocked(int index)  => _unlockedLevels.Contains(index);
-        public void UnlockLevel(int index)       => _unlockedLevels.Add(index);
 
         // ── Resource API ──────────────────────────────────────────────────────
 
-        public void ApplyResources(ResourceDelta delta) => Resources.Apply(delta);
-
-        // ── Card Hand API ─────────────────────────────────────────────────────
-
-        /// <summary>Add a card directly to the player's hand.</summary>
-        public void AddCardToHand(EventCardSO card)
+        public void ApplyResources(ResourceDelta delta)
         {
-            if (card == null) return;
-            if (!card.CanDuplicate && _hand.Contains(card)) return;
-            _hand.Add(card);
+            Resources.Apply(delta);
+
+            // Track peak Gold/Morale for class tasks
+            if (Resources.Gold   > TaskProgress.PeakGold)   TaskProgress.PeakGold   = Resources.Gold;
+            if (Resources.Morale > TaskProgress.PeakMorale) TaskProgress.PeakMorale = Resources.Morale;
         }
 
-        /// <summary>Remove a card from hand (called when played or discarded).</summary>
-        public bool RemoveCardFromHand(EventCardSO card)
+        // ── Tile Movement (costs Rations) ─────────────────────────────────────
+
+        /// <summary>
+        /// Move the player one tile on the area map.
+        /// Deducts 1 Ration, or applies starvation if Rations = 0.
+        /// </summary>
+        public void MoveToTile(Vector2Int newPos)
         {
-            return _hand.Remove(card);
+            if (CurrentArea == null) return;
+            CurrentArea.PlayerPosition = newPos;
+
+            if (Resources.Rations > 0)
+            {
+                Resources.Apply(new ResourceDelta { Rations = -1 });
+                IsStarving = false;
+            }
+            else
+            {
+                // Starvation — lose HP fraction and morale instead
+                IsStarving = true;
+                TaskProgress.StarvedCombats++; // used broadly as "starved moves"
+
+                if (HeroRT != null)
+                {
+                    StarvationHPPenalty = Mathf.Min(StarvationHPPenalty + StarvationHPLossPerMove, StarvationHPCap);
+                    int penaltyHP = Mathf.RoundToInt(HeroRT.MaxHP * StarvationHPLossPerMove);
+                    HeroCurrentHP = Mathf.Max(1,
+                        (HeroCurrentHP < 0 ? HeroRT.MaxHP : HeroCurrentHP) - penaltyHP);
+                }
+
+                Resources.Apply(new ResourceDelta { Morale = -StarvationMoraleLoss });
+                Debug.Log("[GameSession] Starvation! HP and Morale reduced.");
+            }
         }
 
-        // ── Drop Queue API ────────────────────────────────────────────────────
+        // ── Area Map API ──────────────────────────────────────────────────────
 
-        /// <summary>Called by CombatManager after victory to queue drops for the EventDeck screen.</summary>
-        public void QueueCardDrops(List<EventCardSO> drops)
+        public void IncrementThreat()
         {
-            if (drops == null) return;
-            _pendingDrops.AddRange(drops);
+            if (CurrentArea == null) return;
+            CurrentArea.ThreatCurrent++;
+
+            if (CurrentArea.ThreatCurrent >= CurrentArea.ThreatMax)
+                LockRemainingTiles();
         }
 
-        /// <summary>Consume the pending drops — moves them into the player's hand.</summary>
-        public void AcceptPendingDrops()
+        private void LockRemainingTiles()
         {
-            foreach (var card in _pendingDrops)
-                AddCardToHand(card);
-            _pendingDrops.Clear();
+            if (CurrentArea == null) return;
+            foreach (var tile in CurrentArea.Tiles)
+            {
+                if (!tile.Visited && tile.TileType == TileType.Event)
+                    tile.Locked = true;
+            }
         }
 
-        /// <summary>Discard pending drops without adding them to hand.</summary>
-        public void ClearPendingDrops() => _pendingDrops.Clear();
+        // ── World Map API ─────────────────────────────────────────────────────
+
+        public WorldMapLayer GetCurrentLayer()
+        {
+            if (WorldMap == null || CurrentLayerIndex < 0 || CurrentLayerIndex >= WorldMap.Layers.Count)
+                return null;
+            return WorldMap.Layers[CurrentLayerIndex];
+        }
+
+        public WorldMapNode FindWorldNode(string nodeId)
+        {
+            if (WorldMap == null || string.IsNullOrEmpty(nodeId)) return null;
+            foreach (var layer in WorldMap.Layers)
+                foreach (var node in layer.Nodes)
+                    if (node.Id == nodeId) return node;
+            return null;
+        }
+
+        public void CompleteCurrentWorldNode()
+        {
+            var node = FindWorldNode(CurrentWorldNodeId);
+            if (node != null) node.Visited = true;
+
+            CurrentWorldNodeId  = null;
+            CurrentArea         = null;
+            IsStarving          = false;
+            StarvationHPPenalty = 0f;
+            CurrentLayerIndex++;
+        }
+
+        // ── Class XP API ──────────────────────────────────────────────────────
+
+        public void AddClassXP(int xp)
+        {
+            if (xp <= 0) return;
+            PendingClassXP += xp;
+            Debug.Log($"[GameSession] +{xp} class XP (pending). Total pending: {PendingClassXP}");
+        }
+
+        /// <summary>Flush pending XP to CommanderProfile at run end.</summary>
+        public void FlushClassXPToProfile()
+        {
+            if (ActiveClass == null || PendingClassXP <= 0) return;
+            CommanderProfile.Instance?.AddClassXP(ActiveClass, PendingClassXP);
+            PendingClassXP = 0;
+        }
+
+        // ── Task Progress API ─────────────────────────────────────────────────
+
+        public void RecordCombatWin()
+        {
+            TaskProgress.CombatsWon++;
+            FightsWon++;
+        }
+
+        public void RecordCitizenHelped()
+        {
+            TaskProgress.CitizensHelped++;
+        }
+
+        public void RecordBossReached()
+        {
+            TaskProgress.ReachedBoss = true;
+        }
+
+        public void RecordRunComplete()
+        {
+            TaskProgress.RunCompleted = true;
+        }
+
+        public void RecordBuffSkipped()
+        {
+            TaskProgress.ConsecutiveWinsNoBuff++;
+        }
+
+        public void ResetConsecutiveNoBuff()
+        {
+            TaskProgress.ConsecutiveWinsNoBuff = 0;
+        }
 
         // ── Buff API ──────────────────────────────────────────────────────────
 
         public void AddBuff(BuffSO buff)
         {
-            if (buff != null) _activeBuffs.Add(buff);
+            if (buff == null) return;
+            _earnedBuffs.Add(buff);
+            HeroRT?.ApplyBuff(buff);
+            ResetConsecutiveNoBuff();
         }
 
         // ── Reset ─────────────────────────────────────────────────────────────
 
         public void ResetSession()
         {
-            _completedLevels.Clear();
-            _unlockedLevels.Clear();
-            _unlockedLevels.Add(0);
-            TotalGold    = 0;
-            TotalXP      = 0;
-            CurrentLevel = null;
-            _activeBuffs.Clear();
-            _hand.Clear();
-            _pendingDrops.Clear();
-            Resources = new PlayerResources();
+            _earnedBuffs.Clear();
+            Resources           = new PlayerResources();
+            HeroCurrentHP       = -1;
+            HeroRT              = null;
+            FightsWon           = 0;
+            WorldMap            = null;
+            CurrentLayerIndex   = 0;
+            CurrentWorldNodeId  = null;
+            CurrentArea         = null;
+            IsStarving          = false;
+            StarvationHPPenalty = 0f;
+            PendingClassXP      = 0;
+            TaskProgress        = new RunTaskProgress();
+            // Note: ActiveClass is set AFTER reset by GameManager from class selection.
         }
 
         // ── Save / Load ───────────────────────────────────────────────────────
 
-        public void LoadFromSave(int gold, int xp,
-            List<int> completedIndices, List<int> unlockedIndices,
-            List<string> buffNames, int currentLevelIndex,
-            RPG.Data.BuffRegistry registry)
+        /// <summary>Called by SaveSystem to restore starvation state without re-triggering side-effects.</summary>
+        public void LoadStarvationState(float hpPenalty, bool isStarving)
         {
-            TotalGold = gold;
-            TotalXP   = xp;
-            Resources.Gold = gold;
+            StarvationHPPenalty = hpPenalty;
+            IsStarving          = isStarving;
+        }
 
-            _completedLevels.Clear();
-            foreach (int i in completedIndices) _completedLevels.Add(i);
+        /// <summary>Called by SaveSystem to restore in-run class XP.</summary>
+        public void LoadPendingClassXP(int xp)
+        {
+            PendingClassXP = xp;
+        }
 
-            _unlockedLevels.Clear();
-            _unlockedLevels.Add(0);
-            foreach (int i in unlockedIndices) _unlockedLevels.Add(i);
+        public void LoadFromSave(int gold, int scrap, int rations, int morale,
+            List<string> buffNames, RPG.Data.BuffRegistry registry)
+        {
+            Resources = new PlayerResources
+            {
+                Gold    = gold,
+                Scrap   = scrap,
+                Rations = rations,
+                Morale  = morale,
+            };
 
-            _activeBuffs.Clear();
+            _earnedBuffs.Clear();
             if (registry != null)
                 foreach (string n in buffNames)
                 {
                     var buff = registry.FindByName(n);
-                    if (buff != null) _activeBuffs.Add(buff);
+                    if (buff != null) _earnedBuffs.Add(buff);
                 }
         }
     }

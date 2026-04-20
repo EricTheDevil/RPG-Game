@@ -18,17 +18,17 @@ namespace RPG.Data
         public AbilityTarget Target = AbilityTarget.SingleEnemy;
 
         [Header("Range")]
-        public int Range = 1;
-        public int AOERadius = 0;
+        [Range(1, 10)] public int Range = 1;
+        [Range(0, 5)]  public int AOERadius = 0;
 
         [Header("Cost")]
-        public int MPCost = 0;
+        [Range(0, 999)] public int MPCost = 0;
 
         [Header("Power")]
-        public float DamageMultiplier = 1.0f;
-        public int FlatDamage = 0;
-        public float HealMultiplier = 0f;
-        public int FlatHeal = 0;
+        [Range(0f, 10f)] public float DamageMultiplier = 1.0f;
+        [Range(0, 999)]  public int   FlatDamage = 0;
+        [Range(0f, 5f)]  public float HealMultiplier = 0f;
+        [Range(0, 999)]  public int   FlatHeal = 0;
 
         [Header("Special Flags")]
         public bool ApplyDefendBuff = false;

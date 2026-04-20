@@ -14,30 +14,54 @@ namespace RPG.Units
     // ─────────────────────────────────────────────────────────────────────────
     public class RuntimeStats
     {
-        public int MaxHP, MaxMP, Attack, Defense, MagicAttack, MagicDefense, Speed, Movement;
+        public int   MaxHP, MaxMP, Attack, Defense, MagicAttack, MagicDefense, Speed, Movement;
+        public float CritChance;   // 0–1, e.g. 0.10 = 10%
+        public float CritMultiplier;  // e.g. 1.6 = 60% bonus damage
+
+        /// <summary>Parameterless constructor — for explicit field initialisation.</summary>
+        public RuntimeStats() { }
 
         public RuntimeStats(UnitStatsSO src)
         {
-            MaxHP        = src.MaxHP;
-            MaxMP        = src.MaxMP;
-            Attack       = src.Attack;
-            Defense      = src.Defense;
-            MagicAttack  = src.MagicAttack;
-            MagicDefense = src.MagicDefense;
-            Speed        = src.Speed;
-            Movement     = src.Movement;
+            MaxHP          = src.MaxHP;
+            MaxMP          = src.MaxMP;
+            Attack         = src.Attack;
+            Defense        = src.Defense;
+            MagicAttack    = src.MagicAttack;
+            MagicDefense   = src.MagicDefense;
+            Speed          = src.Speed;
+            Movement       = src.Movement;
+            CritChance     = src.BaseCritChance;
+            CritMultiplier = src.BaseCritMultiplier;
+        }
+
+        /// <summary>Deep copy constructor — use when persisting to GameSession.</summary>
+        public RuntimeStats(RuntimeStats src)
+        {
+            MaxHP          = src.MaxHP;
+            MaxMP          = src.MaxMP;
+            Attack         = src.Attack;
+            Defense        = src.Defense;
+            MagicAttack    = src.MagicAttack;
+            MagicDefense   = src.MagicDefense;
+            Speed          = src.Speed;
+            Movement       = src.Movement;
+            CritChance     = src.CritChance;
+            CritMultiplier = src.CritMultiplier;
         }
 
         public void ApplyBuff(BuffSO buff)
         {
-            MaxHP        += buff.BonusMaxHP;
-            MaxMP        += buff.BonusMaxMP;
-            Attack       += buff.BonusAttack;
-            Defense      += buff.BonusDefense;
-            MagicAttack  += buff.BonusMagicAttack;
-            MagicDefense += buff.BonusMagicDefense;
-            Speed        += buff.BonusSpeed;
-            Movement     += buff.BonusMovement;
+            MaxHP          += buff.BonusMaxHP;
+            MaxMP          += buff.BonusMaxMP;
+            Attack         += buff.BonusAttack;
+            Defense        += buff.BonusDefense;
+            MagicAttack    += buff.BonusMagicAttack;
+            MagicDefense   += buff.BonusMagicDefense;
+            Speed          += buff.BonusSpeed;
+            Movement       += buff.BonusMovement;
+            CritChance     += buff.BonusCritChance;
+            CritMultiplier += buff.BonusCritMultiplier;
         }
     }
 
@@ -70,15 +94,12 @@ namespace RPG.Units
         public RuntimeStats RT { get; set; }   // public set so TraitSystem can write it
 
         // ── Runtime State ─────────────────────────────────────────────────────
-        public int       CurrentHP   { get; protected set; }
-        public int       CurrentMP   { get; protected set; }
-        public float     CT          { get; set; }
-        public Team      Team        { get; set; }
-        public UnitState State       { get; protected set; } = UnitState.Idle;
+        public int        CurrentHP    { get; protected set; }
+        public int        CurrentMP    { get; protected set; }
+        public Team       Team         { get; set; }
+        public UnitState  State        { get; protected set; } = UnitState.Idle;
         public Vector2Int GridPosition { get; set; }
-        public bool      HasActed    { get; set; }
-        public bool      HasMoved    { get; set; }
-        public bool      IsDefending { get; set; }
+        public bool       IsDefending  { get; set; }
 
         public List<AbilitySO> Abilities { get; protected set; } = new();
 
@@ -86,8 +107,6 @@ namespace RPG.Units
         public event Action<int, bool> OnDamaged;   // (amount, isCrit)
         public event Action<int>       OnHealed;
         public event Action            OnDeath;
-        public event Action            OnTurnStarted;
-        public event Action            OnTurnEnded;
 
         public bool IsAlive => State != UnitState.Dead;
 
@@ -99,23 +118,43 @@ namespace RPG.Units
         public virtual void Initialize(Team team)
         {
             Team = team;
-            RT   = new RuntimeStats(Stats);
 
-            // Apply persistent roguelike buffs (hero only)
             if (team == Team.Player)
             {
                 var session = Core.GameSession.Instance;
-                if (session != null)
-                    foreach (var buff in session.ActiveBuffs)
-                        RT.ApplyBuff(buff);
-            }
+                if (session?.HeroRT != null)
+                {
+                    // Restore deep copy of last fight's stats (preserves all buffs/bonuses)
+                    RT = new RuntimeStats(session.HeroRT);
+                }
+                else
+                {
+                    // First fight of a run: build from base SO + any earned buffs
+                    RT = new RuntimeStats(Stats);
+                    if (session != null)
+                        foreach (var buff in session.EarnedBuffs)
+                            RT.ApplyBuff(buff);
+                }
 
-            CurrentHP  = RT.MaxHP;
-            CurrentMP  = RT.MaxMP;
-            CT         = UnityEngine.Random.Range(0f, 15f);
-            State      = UnitState.Idle;
-            HasActed   = false;
-            HasMoved   = false;
+                // Morale modifier: each point above/below 5 adds/removes 2% to Attack & Defense
+                if (session != null)
+                {
+                    float moraleBonus = 1f + (session.Resources.Morale - 5) * 0.02f;
+                    RT.Attack  = Mathf.RoundToInt(RT.Attack  * moraleBonus);
+                    RT.Defense = Mathf.RoundToInt(RT.Defense * moraleBonus);
+                }
+
+                // Restore HP (carry damage forward; -1 = start full)
+                int savedHP = session?.HeroCurrentHP ?? -1;
+                CurrentHP = (savedHP > 0 && savedHP <= RT.MaxHP) ? savedHP : RT.MaxHP;
+            }
+            else
+            {
+                RT        = new RuntimeStats(Stats);
+                CurrentHP = RT.MaxHP;
+            }
+            CurrentMP   = RT.MaxMP;
+            State       = UnitState.Idle;
             IsDefending = false;
 
             // Ensure AI component exists
@@ -136,22 +175,6 @@ namespace RPG.Units
 
         protected abstract void SetupAbilities();
 
-        // ── Turn Management ───────────────────────────────────────────────────
-        public virtual void StartTurn()
-        {
-            HasActed    = false;
-            HasMoved    = false;
-            IsDefending = false;
-            State       = UnitState.Idle;
-            OnTurnStarted?.Invoke();
-        }
-
-        public virtual void EndTurn()
-        {
-            CT = 0f;
-            OnTurnEnded?.Invoke();
-        }
-
         // ── Combat ────────────────────────────────────────────────────────────
         public virtual void TakeDamage(int rawDamage, bool ignoreDefense = false)
         {
@@ -160,15 +183,15 @@ namespace RPG.Units
             int def    = ignoreDefense ? 0 : (IsDefending ? RT.Defense * 2 : RT.Defense);
             int damage = Mathf.Max(1, rawDamage - def);
 
-            bool isCrit = UnityEngine.Random.value < 0.10f;
-            if (isCrit) damage = Mathf.RoundToInt(damage * 1.6f);
+            bool isCrit = UnityEngine.Random.value < RT.CritChance;
+            if (isCrit) damage = Mathf.RoundToInt(damage * RT.CritMultiplier);
 
             CurrentHP = Mathf.Max(0, CurrentHP - damage);
             OnDamaged?.Invoke(damage, isCrit);
 
             if (UnitAnimator != null) UnitAnimator.SetTrigger("Hit");
 
-            if (CurrentHP <= 0) StartCoroutine(DieRoutine());
+            if (CurrentHP <= 0) TriggerDeath();
         }
 
         public virtual void Heal(int amount)
@@ -178,9 +201,19 @@ namespace RPG.Units
             OnHealed?.Invoke(amount);
         }
 
+        private void TriggerDeath()
+        {
+            if (State == UnitState.Dead) return;
+            State = UnitState.Dead;
+            // Run the death animation on a persistent host so the coroutine
+            // survives even if this GameObject gets deactivated mid-sequence.
+            var host = RPG.Combat.CombatManager.Instance as MonoBehaviour
+                    ?? this as MonoBehaviour;
+            host.StartCoroutine(DieRoutine());
+        }
+
         protected virtual IEnumerator DieRoutine()
         {
-            State = UnitState.Dead;
             if (UnitAnimator != null) UnitAnimator.SetTrigger("Die");
 
             // Death VFX explosion
@@ -221,8 +254,7 @@ namespace RPG.Units
         // ── Movement ──────────────────────────────────────────────────────────
         public IEnumerator MoveToTile(RPG.Grid.GridTile tile, float speed = 4.5f)
         {
-            State    = UnitState.Moving;
-            HasMoved = true;
+            State = UnitState.Moving;
 
             Vector3 startPos = transform.position;
             Vector3 endPos   = tile.WorldPosition + Vector3.up * UnitHeightOffset;

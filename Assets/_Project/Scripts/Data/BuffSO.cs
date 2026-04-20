@@ -22,14 +22,18 @@ namespace RPG.Data
         public BuffRarity Rarity      = BuffRarity.Common;
 
         [Header("Stat Modifiers  (flat additive, stacks each pickup)")]
-        public int BonusMaxHP         = 0;
-        public int BonusMaxMP         = 0;
-        public int BonusAttack        = 0;
-        public int BonusDefense       = 0;
-        public int BonusMagicAttack   = 0;
-        public int BonusMagicDefense  = 0;
-        public int BonusSpeed         = 0;
-        public int BonusMovement      = 0;
+        public int   BonusMaxHP         = 0;
+        public int   BonusMaxMP         = 0;
+        public int   BonusAttack        = 0;
+        public int   BonusDefense       = 0;
+        public int   BonusMagicAttack   = 0;
+        public int   BonusMagicDefense  = 0;
+        public int   BonusSpeed         = 0;
+        public int   BonusMovement      = 0;
+
+        [Header("Crit Modifiers")]
+        [Range(0f, 1f)] public float BonusCritChance     = 0f;
+        [Range(0f, 3f)] public float BonusCritMultiplier = 0f;
     }
 
     public enum BuffRarity { Common, Rare, Epic }

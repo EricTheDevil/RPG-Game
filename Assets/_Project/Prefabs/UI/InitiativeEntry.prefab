@@ -375,7 +375,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8647755702932826227}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1524d87226d7d49e99cad651a0ed6f43, type: 3}
+  m_Script: {fileID: 11500000, guid: 2365d8d84cf5c4dc9a22bd97eafa59ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RPG.UI.InitiativeEntry
   Portrait: {fileID: 8718019073900079542}

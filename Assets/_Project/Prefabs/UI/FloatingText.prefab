@@ -160,7 +160,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8864582829191206283}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72b960ddf353e4f29a1c0cedb4ed3ab8, type: 3}
+  m_Script: {fileID: 11500000, guid: 0682f93f465a84369bcfbbfe3798b0ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RPG.VFX.FloatingText
   Label: {fileID: 2025731519974111213}

@@ -39,7 +39,6 @@ namespace RPG.Combat
         // ── Scene References ──────────────────────────────────────────────────
         [Header("Scene References")]
         public BattleGrid       Grid;
-        public CombatTimeline   Timeline;
         public CombatVFXManager VFXManager;
         public TraitSystem      TraitSystem;
 
@@ -70,12 +69,12 @@ namespace RPG.Combat
         public Vector2Int[] PlayerSpawns = { new Vector2Int(1, 2), new Vector2Int(1, 4), new Vector2Int(1, 6) };
         public Vector2Int[] EnemySpawns  = { new Vector2Int(6, 2), new Vector2Int(6, 4), new Vector2Int(6, 6) };
 
-        // ── Autobattle Pacing ─────────────────────────────────────────────────
-        [Header("Autobattle Pacing")]
-        [Tooltip("Seconds each CT tick takes — lower = faster battle")]
-        public float TickInterval    = 0.05f;
-        [Tooltip("Pause after a unit acts before resuming ticks")]
-        public float PostActionPause = 0.35f;
+        // ── Real-Time Pacing ──────────────────────────────────────────────────
+        [Header("Real-Time Pacing")]
+        [Tooltip("Seconds between attacks (base cooldown, divided by Speed/10)")]
+        public float BaseAttackCooldown = 1.5f;
+        [Tooltip("How often each unit re-evaluates and moves (seconds)")]
+        public float MoveTickInterval   = 0.25f;
 
         // ── Runtime State ─────────────────────────────────────────────────────
         public CombatPhase CurrentPhase { get; private set; } = CombatPhase.Setup;
@@ -116,28 +115,42 @@ namespace RPG.Combat
             Grid.GenerateGrid();
             yield return null;
 
-            // Pull encounter config from the card the player played, if any.
-            // This bridges GameManager.PendingCombatCard → CombatManager.SpawnConfig
-            // without tight coupling: CombatManager simply asks for what's available.
-            var pendingCard = RPG.Core.GameManager.Instance?.PendingCombatCard;
-            if (pendingCard != null)
+            // ── Resource upkeep: each fight costs 1 Ration ───────────────────
+            var sessionSetup = RPG.Core.GameSession.Instance;
+            if (sessionSetup != null)
             {
-                if (pendingCard.SpawnConfig != null)
-                    SpawnConfig = pendingCard.SpawnConfig;
-
-                // Register the card's difficulty scale for future stat scaling
-                _difficultyScale = pendingCard.DifficultyScale;
-
-                // Mark this as the active level so CompleteCurrentLevel() works
-                RPG.Core.GameSession.Instance?.SetCurrentLevel(null); // card-based runs don't use LevelDataSO
+                if (sessionSetup.Resources.Rations > 0)
+                {
+                    sessionSetup.ApplyResources(new RPG.Data.ResourceDelta { Rations = -1 });
+                }
+                else
+                {
+                    // Out of rations → morale drops
+                    sessionSetup.ApplyResources(new RPG.Data.ResourceDelta { Morale = -1 });
+                    Log("<color=#FF8888>No rations — morale falls!</color>");
+                }
             }
+
+            // Pull encounter config from the pending combat event, if any.
+            var pendingEvent = RPG.Core.GameManager.Instance?.PendingCombatEvent;
+            if (pendingEvent != null)
+            {
+                if (pendingEvent.SpawnConfig != null)
+                    SpawnConfig = pendingEvent.SpawnConfig;
+
+                _difficultyScale = pendingEvent.DifficultyScale;
+            }
+
+            // Run-depth multiplier: +5% per fight won this run (compounds on top of card scale).
+            int fightsWon = RPG.Core.GameSession.Instance?.FightsWon ?? 0;
+            if (fightsWon > 0)
+                _difficultyScale *= 1f + fightsWon * 0.05f;
 
             SpawnUnits();
             ApplyDifficultyScale();
             yield return null;
 
             TraitSystem?.ApplySynergies(_allUnits);
-            Timeline.RegisterUnits(_allUnits);
 
             // Guard: abort if no units on either side
             if (_playerUnits.Count == 0 || _enemyUnits.Count == 0)
@@ -151,7 +164,13 @@ namespace RPG.Combat
             yield return new WaitForSeconds(1.2f);
 
             SetPhase(CombatPhase.Autobattle);
-            StartCoroutine(AutobattleLoop());
+
+            // Launch independent coroutines for each unit (TFT-style real-time)
+            foreach (var unit in _allUnits)
+                StartCoroutine(UnitBehaviourLoop(unit));
+
+            // Monitor for win/loss
+            StartCoroutine(BattleOutcomeWatcher());
         }
 
         // ── Spawn ─────────────────────────────────────────────────────────────
@@ -301,20 +320,73 @@ namespace RPG.Combat
 
         private void HandleUnitDeath(Unit unit, string logMsg)
         {
-            Timeline.RemoveUnit(unit);
             var tile = Grid.GetTile(unit.GridPosition);
             if (tile != null) tile.OccupyingUnit = null;
             Log(logMsg);
         }
 
-        // ── Autobattle Loop ────────────────────────────────────────────────────
-        private IEnumerator AutobattleLoop()
+        // ── Real-Time Per-Unit Behaviour Loop (TFT-style) ─────────────────────
+        private IEnumerator UnitBehaviourLoop(Unit unit)
+        {
+            // Small stagger so units don't all collide on frame 1
+            yield return new WaitForSeconds(UnityEngine.Random.Range(0f, 0.4f));
+
+            while (CurrentPhase == CombatPhase.Autobattle && unit.IsAlive)
+            {
+                var opponents      = unit.Team == Team.Player ? _enemyUnits : _playerUnits;
+                var allies         = unit.Team == Team.Player ? _playerUnits : _enemyUnits;
+                var aliveOpponents = opponents.Where(u => u.IsAlive).ToList();
+                var aliveAllies    = allies.Where(u => u.IsAlive).ToList();
+
+                if (aliveOpponents.Count == 0) yield break;
+
+                var (ability, target) = unit.AI.SelectAction(unit, aliveOpponents, aliveAllies, Grid);
+                if (ability == null || target == null) { yield return new WaitForSeconds(MoveTickInterval); continue; }
+
+                // ── Approach phase: keep stepping toward target until in range ──
+                while (CurrentPhase == CombatPhase.Autobattle && unit.IsAlive
+                       && ManhattanDist(unit.GridPosition, target.GridPosition) > ability.Range)
+                {
+                    if (!target.IsAlive) break;
+
+                    var movable  = Grid.GetMovableTiles(unit.GridPosition, 1);  // step 1 tile at a time
+                    var bestTile = movable
+                        .Where(t => !t.IsOccupied)
+                        .OrderBy(t => ManhattanDist(t.GridPos, target.GridPosition))
+                        .FirstOrDefault();
+
+                    if (bestTile == null) break; // stuck / blocked
+
+                    var fromTile = Grid.GetTile(unit.GridPosition);
+                    if (fromTile != null) fromTile.OccupyingUnit = null;
+                    yield return unit.MoveToTile(bestTile);
+                    bestTile.OccupyingUnit = unit;
+
+                    yield return new WaitForSeconds(MoveTickInterval);
+                }
+
+                if (!unit.IsAlive || !target.IsAlive) continue;
+                if (ManhattanDist(unit.GridPosition, target.GridPosition) > ability.Range) continue;
+
+                // ── Attack ────────────────────────────────────────────────────
+                OnUnitActed?.Invoke(unit);
+                yield return ExecuteAbility(unit, target, ability);
+
+                // Cooldown scales with Speed (faster = more attacks per second)
+                float cooldown = BaseAttackCooldown / Mathf.Max(0.5f, unit.RT.Speed / 10f);
+                yield return new WaitForSeconds(cooldown);
+            }
+        }
+
+        // ── Battle Outcome Watcher ────────────────────────────────────────────
+        private IEnumerator BattleOutcomeWatcher()
         {
             while (CurrentPhase == CombatPhase.Autobattle)
             {
                 if (_enemyUnits.All(e => !e.IsAlive))
                 {
                     yield return new WaitForSeconds(0.8f);
+                    PersistHeroHP();
                     SetPhase(CombatPhase.Victory);
                     OnVictory?.Invoke();
                     yield break;
@@ -322,75 +394,44 @@ namespace RPG.Combat
                 if (_playerUnits.All(p => !p.IsAlive))
                 {
                     yield return new WaitForSeconds(0.8f);
+                    // Hero is dead — clear snapshot so next fight starts fresh
+                    var session = RPG.Core.GameSession.Instance;
+                    if (session != null) { session.HeroCurrentHP = -1; session.HeroRT = null; }
                     SetPhase(CombatPhase.Defeat);
                     OnDefeat?.Invoke();
                     yield break;
                 }
-
-                Unit readyUnit = Timeline.Tick();
-
-                if (readyUnit == null || !readyUnit.IsAlive)
-                {
-                    yield return new WaitForSeconds(TickInterval);
-                    continue;
-                }
-
-                readyUnit.StartTurn();
-                OnUnitActed?.Invoke(readyUnit);
-                Log($"<b>{readyUnit.Stats.UnitName}</b> acts.");
-
-                Grid.ClearAllHighlights();
-                Grid.GetTile(readyUnit.GridPosition)?.SetHighlight(TileHighlight.Selected);
-
-                yield return ExecuteUnitTurn(readyUnit);
-
-                Grid.ClearAllHighlights();
-                readyUnit.EndTurn();
-                yield return new WaitForSeconds(PostActionPause);
+                yield return new WaitForSeconds(0.15f);
             }
         }
 
-        // ── Unit Turn Execution ────────────────────────────────────────────────
-        private IEnumerator ExecuteUnitTurn(Unit actor)
+        /// <summary>
+        /// Snapshot the hero's full RuntimeStats and current HP into GameSession.
+        /// This persists HP damage, stat buffs, and all in-combat scaling across fights.
+        /// Called on victory only — defeat resets so next fight starts fresh.
+        /// </summary>
+        private void PersistHeroHP()
         {
-            var opponents      = actor.Team == Team.Player ? _enemyUnits  : _playerUnits;
-            var allies         = actor.Team == Team.Player ? _playerUnits : _enemyUnits;
-            var aliveOpponents = opponents.Where(u => u.IsAlive).ToList();
-            var aliveAllies    = allies.Where(u => u.IsAlive).ToList();
-
-            if (aliveOpponents.Count == 0) yield break;
-
-            var (ability, target) = actor.AI.SelectAction(actor, aliveOpponents, aliveAllies, Grid);
-            if (ability == null || target == null) yield break;
-
-            int dist = ManhattanDist(actor.GridPosition, target.GridPosition);
-            if (dist > ability.Range && !actor.HasMoved)
+            var session = RPG.Core.GameSession.Instance;
+            if (session == null) return;
+            var hero = _playerUnits.FirstOrDefault(u => u.IsAlive);
+            if (hero == null)
             {
-                var movable = Grid.GetMovableTiles(actor.GridPosition, actor.RT.Movement);
-                var bestTile = movable
-                    .Where(t => !t.IsOccupied)
-                    .OrderBy(t => ManhattanDist(t.GridPos, target.GridPosition))
-                    .FirstOrDefault();
-
-                if (bestTile != null)
-                {
-                    var fromTile = Grid.GetTile(actor.GridPosition);
-                    if (fromTile != null) fromTile.OccupyingUnit = null;
-                    yield return actor.MoveToTile(bestTile);
-                    bestTile.OccupyingUnit = actor;
-                }
+                session.HeroCurrentHP = -1;
+                session.HeroRT        = null;
+                return;
             }
-
-            dist = ManhattanDist(actor.GridPosition, target.GridPosition);
-            if (dist > ability.Range) yield break;
-
-            yield return ExecuteAbility(actor, target, ability);
+            session.HeroCurrentHP = hero.CurrentHP;
+            session.HeroRT        = new RPG.Units.RuntimeStats(hero.RT);  // deep copy — prevents mutation after save
+            session.FightsWon    += 1;
         }
 
         // ── Ability Execution ──────────────────────────────────────────────────
         public IEnumerator ExecuteAbility(Unit caster, Unit target, AbilitySO ability)
         {
-            Log($"{caster.Stats.UnitName} uses <color=#FFD700><b>{ability.AbilityName}</b></color>!");
+            // Only log non-basic abilities to keep the log readable
+            if (ability.MPCost > 0 || ability.AOERadius > 0 || ability.ApplyDefendBuff)
+                Log($"{caster.Stats.UnitName} uses <color=#FFD700><b>{ability.AbilityName}</b></color>!");
             caster.ConsumeMP(ability.MPCost);
 
             if (target != caster)
@@ -440,7 +481,6 @@ namespace RPG.Combat
                 target.Heal(heal);
             }
 
-            caster.HasActed = true;
             yield return new WaitForSeconds(0.2f);
         }
 

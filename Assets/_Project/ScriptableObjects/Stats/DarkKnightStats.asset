@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 837d15a7573804ca4b83c13fc5561fa5, type: 3}
+  m_Script: {fileID: 11500000, guid: 9f154ef679671406eb6fac4a73e5bcd6, type: 3}
   m_Name: DarkKnightStats
   m_EditorClassIdentifier: Assembly-CSharp::RPG.Data.UnitStatsSO
   UnitName: Dark Knight

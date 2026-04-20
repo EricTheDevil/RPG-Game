@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f38a7c2d22b14d6499dfc8a55951acd, type: 3}
+  m_Script: {fileID: 11500000, guid: 530eb7bcafce54aa78f94d8ddd071b58, type: 3}
   m_Name: EventCardRegistry
   m_EditorClassIdentifier: Assembly-CSharp::RPG.Data.EventCardRegistry
   Cards:
